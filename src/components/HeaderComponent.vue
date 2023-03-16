@@ -1,10 +1,15 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 
-console.log(localStorage)
 const isLoggedIn = localStorage.getItem("isLoggedIn")
-const name = localStorage.getItem("name")
 const email = localStorage.getItem("email")
+
+const logout = () => {
+  localStorage.removeItem("isLoggedIn")
+  localStorage.removeItem("email")
+  localStorage.removeItem("token")
+  window.location.reload()
+}
 
 </script>
 
@@ -18,7 +23,6 @@ const email = localStorage.getItem("email")
       <!-- If logged in { -->
       <template v-if="isLoggedIn">
         <div>
-          {{ name }}, 
           {{ email }}
         </div>
         <div>
@@ -27,7 +31,9 @@ const email = localStorage.getItem("email")
           <!-- Boards -->
         </div>
         <div>
-          <!-- Log out -->
+          <button @click="logout">
+            log out
+          </button>
         </div>
       <!-- } -->
       </template>

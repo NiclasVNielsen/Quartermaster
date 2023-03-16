@@ -1,5 +1,5 @@
 <script setup>
-import Header from '../components/Header.vue'
+import Header from '../components/HeaderComponent.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 </script>
 
