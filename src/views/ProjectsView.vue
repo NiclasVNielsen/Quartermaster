@@ -11,7 +11,7 @@ import Header from '../components/HeaderComponent.vue'
     <ul>
       <li>
         <p>
-          Morgans long lost rom vault!
+          Morgans long lost rum vault!
         </p>
         <p>
           <RouterLink to="/company/id"> <!-- /company/id -->

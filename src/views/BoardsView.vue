@@ -11,7 +11,7 @@ import Header from '../components/HeaderComponent.vue'
     <ul>
       <li>
         <p>
-          Find Morgans rom vault!
+          Find Morgans rum vault!
         </p>
         <p>
           <RouterLink to="/project/id"> <!-- /project/id -->
@@ -31,7 +31,7 @@ import Header from '../components/HeaderComponent.vue'
       </li>
       <li>
         <p>
-          Drink all Morgans rom!
+          Drink all Morgans rum!
         </p>
         <p>
           <RouterLink to="/project/id"> <!-- /project/id -->
