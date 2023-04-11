@@ -8,7 +8,18 @@ import Header from '../components/HeaderComponent.vue'
     <button>
       Create Company
     </button>
-    
+    <ul>
+      <li>
+        <p>
+          Captain Morgans
+        </p>
+        <p>
+          <RouterLink to="/board/id"> <!-- /board/id -->
+            Open!
+          </RouterLink>
+        </p>
+      </li>
+    </ul>
   </main>
 </template>
 

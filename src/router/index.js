@@ -44,7 +44,7 @@ const router = createRouter({
 
     
     {
-      path: '/board:id',
+      path: '/board/:id',
       name: 'board',
       component: () => import('../views/BoardView.vue'),
       meta: { requiresAuth: true }
