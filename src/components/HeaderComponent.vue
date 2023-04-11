@@ -25,11 +25,20 @@ const logout = () => {
         <div>
           {{ email }}
         </div>
-        <div>
-          <!-- Companies -->
-          <!-- Projects -->
-          <!-- Boards -->
-        </div>
+        <ul>
+          <li>
+            <!-- Companies -->
+            <RouterLink to="/companies">Companies</RouterLink>
+          </li>
+          <li>
+            <!-- Projects -->
+            <RouterLink to="/projects">Projects</RouterLink>
+          </li>
+          <li>
+            <!-- Boards -->
+            <RouterLink to="/boards">Boards</RouterLink>
+          </li>
+        </ul>
         <div>
           <button @click="logout">
             log out
