@@ -25,7 +25,7 @@ const prepareRegister = (e) => {
   })
   .then(response => {
     if(response == "success"){
-      router.push('/')
+      router.push('/boards')
     }else{
       console.log("Ehhh error!...")
       console.log(response)

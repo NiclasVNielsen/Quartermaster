@@ -5,6 +5,9 @@ import Header from '../components/HeaderComponent.vue'
 <template>
   <Header />
   <main>
+    <button>
+      Create Company
+    </button>
     
   </main>
 </template>

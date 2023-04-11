@@ -33,7 +33,7 @@ const login = (e) => {
       
       /* Wohooo! it worked :3 */
       //router.push('/')
-      router.push('/')
+      router.push('/boards')
       return "success"
     })
     .catch(error => {
