@@ -6,29 +6,31 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 
+/* Remove placeholder data */
 const name = ref("")
 const email = ref("")
 const password = ref("")
 const repeatPassword = ref("")
 
-const result = ref()
-
-const prepareRegister = async (e) => {
+const prepareRegister = (e) => {
   e.preventDefault()
 
-  result.value = await register(
-    name.value,
-    email.value,
-    password.value,
-    repeatPassword.value
-  )
-
-  if(result.value == "success"){
-    router.push('/')
-  }
-
-  //! This stuff does not wait for result...
-  console.log(result.value)
+  new Promise((res, rej) => {
+    register(res, rej,
+      name.value,
+      email.value,
+      password.value,
+      repeatPassword.value
+    )
+  })
+  .then(response => {
+    if(response == "success"){
+      router.push('/')
+    }else{
+      console.log("Ehhh error!...")
+      console.log(response)
+    }
+  })
 }
 
 </script>

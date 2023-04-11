@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import Header from '../components/HeaderComponent.vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const email = ref("")
 const password = ref("")
@@ -30,6 +33,7 @@ const login = (e) => {
       
       /* Wohooo! it worked :3 */
       //router.push('/')
+      router.push('/')
       return "success"
     })
     .catch(error => {
