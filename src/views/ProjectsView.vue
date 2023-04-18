@@ -40,7 +40,7 @@ const createPopup = () => {
   </main>
 </template>
 
-<style lang="sass">
+<style scoped lang="sass">
 
 .popup.off
   display: none
