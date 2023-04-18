@@ -22,7 +22,7 @@ const createPopup = () => {
     <ul>
       <li>
         <p>
-          Find Morgans rom vault!
+          Find Morgans rum vault!
         </p>
         <p>
           <RouterLink to="/project/id"> <!-- /project/id -->
@@ -42,7 +42,7 @@ const createPopup = () => {
       </li>
       <li>
         <p>
-          Drink all Morgans rom!
+          Drink all Morgans rum!
         </p>
         <p>
           <RouterLink to="/project/id"> <!-- /project/id -->

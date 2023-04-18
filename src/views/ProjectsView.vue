@@ -20,6 +20,23 @@ const createPopup = () => {
       </div>
     </div>
     
+    <ul>
+      <li>
+        <p>
+          Morgans long lost rum vault!
+        </p>
+        <p>
+          <RouterLink to="/company/id"> <!-- /company/id -->
+            <!-- Part of -->Company
+          </RouterLink>
+        </p>
+        <p>
+          <RouterLink to="/board/id"> <!-- /board/id -->
+            Open!
+          </RouterLink>
+        </p>
+      </li>
+    </ul>
   </main>
 </template>
 
