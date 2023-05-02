@@ -8,6 +8,9 @@ const isLoggedIn = localStorage.getItem("isLoggedIn")
 <template>
   <aside>
     <nav>
+      <figure @click="navSwap" class="burger">
+        Burg
+      </figure>
       <template v-if="isLoggedIn">
         <ul>
           <li>
