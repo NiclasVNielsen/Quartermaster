@@ -1,9 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import '../modules/navSwapper'
 
 const isLoggedIn = localStorage.getItem("isLoggedIn")
-const email = localStorage.getItem("email")
 
 const logout = () => {
   localStorage.removeItem("isLoggedIn")
@@ -15,11 +13,8 @@ const logout = () => {
 </script>
 
 <template>
-  <header>
+  <footer>
     <nav>
-      <figure @click="navSwap" class="burger">
-        Burg
-      </figure>
       <div>
         <RouterLink to="/">Home</RouterLink>
       </div>
@@ -41,10 +36,6 @@ const logout = () => {
           </li>
         </ul>
         <div>
-          
-          <div>
-            {{ email }}
-          </div>
           <button @click="logout">
             log out
           </button>
@@ -61,16 +52,14 @@ const logout = () => {
       <!-- } -->
       </template>
     </nav>
-  </header>
+  </footer>
 </template>
 
 <style lang="sass" scoped>
 
-header
-  background: #faf2dc
+footer
+  background: #dcfaf8
   nav
     display: flex
-  &.off
-    display: none
 
 </style>

@@ -1,5 +1,7 @@
 <script setup>
 import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
+import Footer from '../components/FooterComponent.vue'
 
 const createPopup = () => {
   const popup = document.querySelector(".popup")
@@ -10,7 +12,8 @@ const createPopup = () => {
 
 <template>
   <Header />
-  <main>
+  <main>  
+    <SideNav />
     <button @click="createPopup">
       Create Board
     </button>
@@ -62,6 +65,7 @@ const createPopup = () => {
       </li>
     </ul>
   </main>
+  <Footer />
 </template>
 
 <style lang="sass">

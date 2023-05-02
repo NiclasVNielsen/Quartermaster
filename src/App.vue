@@ -5,14 +5,18 @@ import { RouterView } from 'vue-router'
 
 <template>
   <RouterView />
-
-  <footer>
-    <p>
-      Moop!
-    </p>
-  </footer>
 </template>
 
-<style scoped>
+<style lang="sass">
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
+main
+  display: flex
+
+
+/* Make little thing that peaks out */
 
 </style>

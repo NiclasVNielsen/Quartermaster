@@ -9,7 +9,6 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
       meta: { requiresAuth: false }
     },
-
     {
       path: '/login',
       name: 'login',
@@ -22,7 +21,6 @@ const router = createRouter({
       component: () => import('../views/SignupView.vue'),
       meta: { requiresAuth: false }
     },
-
     {
       path: '/boards',
       name: 'boards',
@@ -41,8 +39,6 @@ const router = createRouter({
       component: () => import('../views/CompaniesView.vue'),
       meta: { requiresAuth: true }
     },
-
-    
     {
       path: '/board/:id',
       name: 'board',

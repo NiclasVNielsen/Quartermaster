@@ -1,4 +1,4 @@
-const register = (resolve, reject, name, email, password, repeatPassword) => { 
+export const register = (resolve, reject, name, email, password, repeatPassword) => { 
     if(password != repeatPassword){
         reject("Passwords doesn't match 3:")
     }else{
@@ -47,5 +47,3 @@ const register = (resolve, reject, name, email, password, repeatPassword) => {
         })
     }
 }
-
-export { register }
