@@ -1,9 +1,9 @@
 <script setup>
-import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
 </script>
 
 <template>
-  <Header />
+  <SideNav />
   <main>
     
   </main>

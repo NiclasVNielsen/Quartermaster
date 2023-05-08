@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -43,8 +43,8 @@ const login = (e) => {
 </script>
 
 <template>
-  <Header />
   <main>
+    <SideNav />
     <form>
       Login!
       <p v-html="errorMessage"></p>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
 import { register } from '../modules/AuthCrud';
 import { useRouter } from 'vue-router';
 
@@ -36,8 +36,8 @@ const prepareRegister = (e) => {
 </script>
 
 <template>
-  <Header />
   <main>
+    <SideNav />
     <form>
       Sign up!
       <p v-text="result"></p>

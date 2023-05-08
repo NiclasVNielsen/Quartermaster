@@ -1,11 +1,11 @@
 <script setup>
-import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 </script>
 
 <template>
-  <Header />
   <main>
+    <SideNav />
     <HelloWorld />
     <p>
       Ahoy! And welcome to this totally awesome program where you can get ya crew in order 

@@ -58,7 +58,8 @@ const logout = () => {
 <style lang="sass" scoped>
 
 footer
-  background: #dcfaf8
+  padding: 40px 5%
+  background: var(--darkSandBg)
   nav
     display: flex
 

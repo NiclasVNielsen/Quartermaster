@@ -1,10 +1,10 @@
 <script setup>
-import Header from '../components/HeaderComponent.vue'
+import SideNav from '../components/SideNav.vue'
 </script>
 
 <template>
-  <Header />
   <main>
+    <SideNav />
     <section class="boardContainer">
       <div class="lane" style="--laneColor: #e66">
         <h3>
@@ -256,7 +256,7 @@ import Header from '../components/HeaderComponent.vue'
         border-radius: 10px
         padding: 5px
       &:nth-of-type(odd)
-        background: #fff
+        background: var(--neutralBg)
         
 
 </style>
