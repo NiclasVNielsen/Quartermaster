@@ -4,12 +4,12 @@ import { RouterLink } from 'vue-router'
 const isLoggedIn = localStorage.getItem("isLoggedIn")
 
 /* const email = localStorage.getItem("email") */
-/* const logout = () => {
+const logout = () => {
   localStorage.removeItem("isLoggedIn")
   localStorage.removeItem("email")
   localStorage.removeItem("token")
   window.location.reload()
-} */
+}
 
 </script>
 
@@ -43,13 +43,23 @@ const isLoggedIn = localStorage.getItem("isLoggedIn")
             </span>
           </RouterLink>
         </div>
-        <div>
-          <RouterLink to="/login">
+        <div v-if="isLoggedIn">
+          <a @click="logout">
             <span class="material-symbols-rounded">
               lock
             </span>
             <span>
               Log out
+            </span>
+          </a>
+        </div>
+        <div v-else>
+          <RouterLink to="/login">
+            <span class="material-symbols-rounded">
+              lock_open
+            </span>
+            <span>
+              Login
             </span>
           </RouterLink>
         </div>
