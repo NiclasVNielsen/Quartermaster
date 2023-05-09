@@ -11,7 +11,7 @@ import SideNav from '../components/SideNav.vue'
           Ahoy Scallywaggy!
         </h1>
         <div class="box">
-          <p>
+          <p>s
             And welcome aboard this totally awesome piece of software where you can get ya crew in order, so you
             wont ever have to question who's turn it be to fix up the deck when she got a scrap, <br> Aaargh!
           </p>
