@@ -30,7 +30,7 @@ import SideNav from '../components/SideNav.vue'
 </template>
 
 <style lang="sass" scoped>
-    
+     
 section
   display: flex
   justify-content: center
