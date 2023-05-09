@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import SideNav from '../components/SideNav.vue'
 import { useRouter } from 'vue-router';
+import Footer from '../components/FooterComponent.vue'
 
 const router = useRouter()
 
@@ -61,7 +62,7 @@ const login = (e) => {
               <label for="email">Email:&nbsp;</label>
             </td>
             <td>
-              <input type="text" placeholder="Captain@morgan.rum" v-model="email" id="email">
+              <input type="text" v-model="email" id="email">
             </td>
           </tr>
           <tr>
@@ -69,14 +70,20 @@ const login = (e) => {
               <label for="password">Password:&nbsp;</label>
             </td>
             <td>
-              <input type="password" placeholder="123456a!" v-model="password" id="password">
+              <input type="password" v-model="password" id="password">
             </td>
           </tr>
         </table>
+        <p class="signupLink">
+          <router-link to="/signup">
+            Don't have an account? Sign up here!
+          </router-link>
+        </p>
         <button class="button" @click="login">Enter!</button>
       </form>
     </section>
   </main>
+  <Footer />
 </template>
 
 <style lang="sass">
@@ -93,6 +100,23 @@ h2
   font-size: 2em
   color: var(--waterText)
   margin-bottom: .5rem
+
+input
+  margin-bottom: .5em
+
+tr:last-of-type
+  td
+    input
+      margin-bottom: 0
+
+.signupLink
+  margin-bottom: .8em
+  text-align: center
+  a
+    color: var(--waterText)
+    transition: 100ms
+    &:hover
+      color: var(--waterTextHighlight)
 
 .box
   border-bottom: 3px solid var(--darkSandBg)

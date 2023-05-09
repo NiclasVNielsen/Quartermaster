@@ -69,6 +69,14 @@ const logout = () => {
           </a>
         </div>
         <div v-else>
+          <RouterLink to="/signup">
+            <span class="material-symbols-rounded">
+              person_add
+            </span>
+            <span>
+              Sign up
+            </span>
+          </RouterLink>
           <RouterLink to="/login">
             <span class="material-symbols-rounded">
               lock_open

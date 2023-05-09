@@ -51,6 +51,23 @@ a
 p, label
     color: var(--darkText)
 
+input
+  border-radius: 20px
+  border: none
+  border-bottom: 3px solid var(--darkSandBg)
+  border-left: 3px solid var(--darkSandBg)
+  padding: .5em
+  background: radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg)
+  color: var(--waterText)
+  transition: 100ms
+  &:focus
+    outline: none
+    border-bottom: 3px solid var(--waterText)
+    border-left: 3px solid var(--waterText)
+  &:hover
+    border-bottom: 3px solid var(--waterText)
+    border-left: 3px solid var(--waterText)
+
 .popup.off
   display: none
 
