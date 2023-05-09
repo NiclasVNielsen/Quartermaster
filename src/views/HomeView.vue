@@ -5,7 +5,7 @@ import SideNav from '../components/SideNav.vue'
 <template>
   <main>
     <SideNav />
-    <section>s
+    <section>
       <div class="container">
         <h1>
           Ahoy Scallywaggy!
