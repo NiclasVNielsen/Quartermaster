@@ -86,7 +86,7 @@ const login = (e) => {
   <Footer />
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
         
 section
   display: flex

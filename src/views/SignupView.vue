@@ -89,7 +89,7 @@ const prepareRegister = (e) => {
   </main>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
           
 section
   display: flex
