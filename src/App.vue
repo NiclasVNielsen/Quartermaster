@@ -48,7 +48,7 @@ a
   &:hover
     color: var(--darkText)
 
-p
+p, label
     color: var(--darkText)
 
 .popup.off

@@ -27,14 +27,18 @@ const login = (e) => {
     )
     .then(data => {
       /* Login in user */
-      localStorage.setItem("email", email.value)
-      localStorage.setItem("isLoggedIn", true) /* <- ? should be edited not made */
-      localStorage.setItem("token", data)
-      
-      /* Wohooo! it worked :3 */
-      //router.push('/')
-      router.push('/boards')
-      return "success"
+      console.log(data.ok)
+      if(data.ok){
+        localStorage.setItem("email", email.value)
+        localStorage.setItem("isLoggedIn", true) /* <- ? should be edited not made */
+        localStorage.setItem("token", data)
+        
+        /* Wohooo! it worked :3 */
+        router.push('/boards')
+        return "success"
+      }else{
+        errorMessage.value = "Ehh you typed something wrong 3:"
+      }
     })
     .catch(error => {
       errorMessage.value = error
@@ -45,16 +49,80 @@ const login = (e) => {
 <template>
   <main>
     <SideNav />
-    <form>
-      Login!
-      <p v-html="errorMessage"></p>
-      <input type="text" placeholder="Email" v-model="email">
-      <input type="password" placeholder="Password" v-model="password">
-      <button @click="login">Login!</button>
-    </form>
+    <section>
+      <form class="container">
+        <h2>
+          Login!
+        </h2>
+        <p v-html="errorMessage" v-if="errorMessage != ''" style="margin-bottom: .5em;"></p>
+        <table class="box">
+          <tr>
+            <td>
+              <label for="email">Email:&nbsp;</label>
+            </td>
+            <td>
+              <input type="text" placeholder="Captain@morgan.rum" v-model="email" id="email">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="password">Password:&nbsp;</label>
+            </td>
+            <td>
+              <input type="password" placeholder="123456a!" v-model="password" id="password">
+            </td>
+          </tr>
+        </table>
+        <button class="button" @click="login">Enter!</button>
+      </form>
+    </section>
   </main>
 </template>
 
 <style lang="sass">
-    
+        
+section
+  display: flex
+  justify-content: center
+  align-items: center
+
+.container
+  max-width: 600px
+  
+h2
+  font-size: 2em
+  color: var(--waterText)
+  margin-bottom: .5rem
+
+.box
+  border-bottom: 3px solid var(--darkSandBg)
+  border-left: 3px solid var(--darkSandBg)
+  background:  var(--sandBg)
+  padding: 25px
+  border-radius: var(--br)
+  transition: 100ms
+  box-shadow: var(--darkText) 0 0 18px -10px
+  margin-bottom: 1rem
+  line-height: 1.5em
+  &:hover
+    border-left: 3px solid var(--waterText)
+    border-bottom: 3px solid var(--waterText)
+    label
+      color: var(--waterText)
+      transition: 100ms
+
+.button
+  background: radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg)
+  padding: .4em .6em
+  border-radius: 20px
+  border: solid 3px var(--waterText)
+  color: var(--waterText)
+  font-weight: 700
+  transition: 100ms
+  cursor: pointer
+  margin: 0 .25em
+  &:hover
+    border: solid 3px var(--waterTextHighlight)
+    color: var(--waterTextHighlight)
+
 </style>
