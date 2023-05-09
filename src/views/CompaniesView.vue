@@ -1,5 +1,6 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
+import Footer from '../components/FooterComponent.vue'
 
 const createPopup = () => {
   const popup = document.querySelector(".popup")
@@ -11,32 +12,48 @@ const createPopup = () => {
 <template>
   <main>
     <SideNav />
-    <button @click="createPopup">
-      Create Company
+    <button class="create" @click="createPopup">
+      + Create Company
     </button>
-    <div class="popup off" @click="createPopup">
-      <div class="popupForm" @click.stop>
-        Meep moop!
+    <section>
+      <button class="create" @click="createPopup">
+        + Create Company
+      </button>
+      <div class="popup off" @click="createPopup">
+        <div class="popupForm" @click.stop>
+          Meep moop!
+        </div>
       </div>
-    </div>
-    
-    <ul>
-      <li>
-        <p>
-          Captain Morgans
-        </p>
-        <p>
-          <RouterLink to="/board/id"> <!-- /board/id -->
-            Open!
-          </RouterLink>
-        </p>
-      </li>
-    </ul>
+      <ul class="listView">
+        <h2>
+          Your Companies
+        </h2>
+        <li>
+          <p class="big">
+            <RouterLink to="/board/id"> <!-- /board/id -->
+              Captain Morgan
+            </RouterLink>
+          </p>
+        </li>
+        <h2>
+          Affiliated Companies
+        </h2>
+        <li>
+          <p class="big">
+            <RouterLink to="/board/id"> <!-- /board/id -->
+              The Caribbean Rum Factory
+            </RouterLink>
+          </p>
+        </li>
+      </ul>
+    </section>
   </main>
+  <Footer />
 </template>
 
-<style lang="sass">
-    
+<style lang="sass" scoped>
 
+h2
+  margin-bottom: .5rem
 
 </style>
