@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const isLoggedIn = localStorage.getItem("isLoggedIn")
 
@@ -8,7 +11,9 @@ const logout = () => {
   localStorage.removeItem("isLoggedIn")
   localStorage.removeItem("email")
   localStorage.removeItem("token")
-  window.location.reload()
+  
+  router.push("/")
+  //location.reload();
 }
 
 </script>
@@ -17,7 +22,7 @@ const logout = () => {
   <aside>
     <nav>
       <section>
-        <div>
+        <div v-if="isLoggedIn">
           <RouterLink to="/companies">
             <span class="material-symbols-rounded">
               apartment
@@ -40,6 +45,16 @@ const logout = () => {
             </span>
             <span>
               Boards
+            </span>
+          </RouterLink>
+        </div>
+        <div v-else>
+          <RouterLink to="/">
+            <span class="material-symbols-rounded">
+              home
+            </span>
+            <span>
+              Home
             </span>
           </RouterLink>
         </div>
