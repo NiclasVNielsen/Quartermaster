@@ -1,32 +1,220 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+
+const boardData = ref([
+  {
+    id: 1,
+    title: "ToDo",
+    category: "todo",
+    order: 1,
+    color: "red",
+    subLanes: [
+      {
+        id: 1,
+        order: 1,
+        title: "Me",
+        cards: [
+          {
+            id: 1,
+            order: 1,
+            title: "Im a great title",
+            desc: "Get the treasure map for captain Morgans long lost rum vault",
+            assigned: "64350f1e176e8ddbc40d37f4",
+            require: [
+              3, 5, 6
+            ],
+            time: 600 /* in minutes */
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Doing",
+    category: "doing",
+    order: 2,
+    color: "yellow",
+    subLanes: [
+      {
+        id: 2,
+        order: 1,
+        title: "Me",
+        cards: [
+          {
+            id: 3,
+            order: 1,
+            title: "Im a great title",
+            desc: "Get the treasure map for captain Morgans long lost rum vault",
+            assigned: "64350f1e176e8ddbc40d37f4",
+            require: [
+              15, 5, 6
+            ],
+            time: 600 /* in minutes */
+          },
+          {
+            id: 8,
+            order: 2,
+            title: "Im a extra great title",
+            desc: "Get the treasure map for captain Morgans long lost rum vault",
+            assigned: "64350f1e176e8ddbc40d37f4",
+            require: [
+              3
+            ],
+            time: 600 /* in minutes */
+          }
+        ]
+      },
+      {
+        id: 3,
+        order: 2,
+        title: "Others",
+        cards: [
+          {
+            id: 4,
+            order: 1,
+            title: "Im an even greater title",
+            desc: "Get MORE treasure maps for random stuff!",
+            assigned: "64350f1e176e8ddbc40d37f4",
+            require: [
+              1
+            ],
+            time: 1200 /* in minutes */
+          }
+        ]
+      },
+    ]
+  },
+  {
+    id: 3,
+    title: "Done",
+    category: "done",
+    order: 3,
+    color: "green",
+    subLanes: [
+      {
+        id: 4,
+        order: 1,
+        title: "Me",
+        cards: [
+          {
+            id: 6,
+            order: 1,
+            title: "Find out where the map is",
+            desc: "Find captain morgans treassure map :3",
+            assigned: "64350f1e176e8ddbc40d37f4",
+            require: [
+              3, 5, 6
+            ],
+            time: 600 /* in minutes */
+          }
+        ]
+      },
+    ]
+  },
+])
+
+const transferCardToNewBoard = (cardId, subLaneId) => {
+  console.log(cardId, subLaneId)
+
+  //? CTRL X the card from its original position
+  let cardCopy;
+  boardData.value.forEach(lane => {
+    lane.subLanes.forEach(subLane => {
+      subLane.cards.forEach(card => {
+        if(card.id == cardId){
+          cardCopy = card
+          const cardArrayId = subLane.cards.indexOf(card)
+          subLane.cards.splice(cardArrayId, 1)
+        }
+      })
+    })
+  });
+
+  //? Paste the card where it needs to go
+  boardData.value.forEach(lane => {
+    lane.subLanes.forEach(subLane => {
+      if(subLane.id == subLaneId){
+        subLane.cards.push(cardCopy)
+      }
+    })
+  });
+
+  //! array is not 2-way-binded, it works but the page dosent update
+} 
 
 onMounted(() => {
-  const cards = document.querySelectorAll(".card")
-  const laneSecs = document.querySelectorAll(".laneSection")
+  let cards = document.querySelectorAll(".card")
+  let laneSecs = document.querySelectorAll(".laneSection")
 
-  cards.forEach(card => {/* dragend */
-    //? Drag Start
-    card.addEventListener("dragstart", () => {
-      console.log("Drag started")
+  let cardBeingDragged;
+
+
+
+  const resetEventlisteners = () => {
+    let cards = document.querySelectorAll(".card")
+    let laneSecs = document.querySelectorAll(".laneSection")
+    
+    cards.forEach(card => {
+      card.removeEventListener("dragstart", startDrag)
     })
-  })
-
-  laneSecs.forEach(laneSec => {/* dragenter, dragleave */
-    //? Drag Over
-    laneSec.addEventListener("dragover", (e) => {
-      e.preventDefault()
+    laneSecs.forEach(laneSec => {
+      laneSec.removeEventListener("dragover", preventDef)
+      laneSec.removeEventListener("drop", dropDrag)
     })
+    addEventListeners()
+  }
 
-    //? Drop
-    laneSec.addEventListener("drop", (e) => {
-      e.preventDefault()
-      console.log("Card dropped")
-      console.log(e)
+
+
+  const startDrag = (e) => {
+    cardBeingDragged = e.target.querySelector(".cardId").innerHTML 
+    console.log(e.target.querySelector(".cardId").innerHTML)
+  }
+  const preventDef = (e) => {
+    e.preventDefault()
+  }
+  const dropDrag = (e) => {
+    e.preventDefault()
+
+    let laneSecId = null 
+    
+    //? i could not pass laneSecId along with an event for some reason
+    //? so i had to do this again...
+    laneSecs.forEach(laneSec => {
+      if(laneSec.contains(e.target)){
+        laneSecId = laneSec.querySelector(".laneSecId").innerHTML
+      }
     })
-  })
+    
+    if(laneSecId != null){
+      transferCardToNewBoard(cardBeingDragged, laneSecId)
+      resetEventlisteners()
+      //! Auto update db here
+    }
+  }
 
+
+
+  const addEventListeners = () => {
+    let cards = document.querySelectorAll(".card")
+    let laneSecs = document.querySelectorAll(".laneSection")
+
+    cards.forEach(card => {
+      //? Drag Start
+      card.addEventListener("dragstart", startDrag)
+    })
+  
+    laneSecs.forEach(laneSec => {
+      //? Drag Over
+      laneSec.addEventListener("dragover", preventDef)
+  
+      //? Drop
+      laneSec.addEventListener("drop", dropDrag)
+    })
+  }
+  addEventListeners()
 })
 
 
@@ -37,233 +225,27 @@ onMounted(() => {
   <main>
     <SideNav />
     <section class="boardContainer">
-      <div class="lane" style="--laneColor: #e66">
-        <h3>
-          ToDo
-        </h3>
-        <section class="laneSection">
-          <div class="card" draggable="true">
+      <div class="lane" :style="{ '--laneColor': lane.color }" v-for="lane in boardData" :key="lane">
+        <i class="laneId" style="display: none">{{ lane.id }}</i>
+        <h3>{{ lane.title }}</h3>
+        <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
+          <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
+          <h4>{{ subLane.title }}</h4>
+          <div class="card" draggable="true" v-for="card in subLane.cards" :key="card">
             <section>
+              <i class="cardId" style="display: block">{{card.id}}</i>
+              <i class="cardOrder" style="display: block">{{card.order}}</i>
               <p>
-                Im a great title
+                {{card.title}}
               </p>
               <p>
-                Get the treasure map for captain Morgans long lost rum vault
+                {{card.desc}}
               </p>
               <p>
-                Me
-              </p>
-            </section>
-            <section style="display: none;">
-              <p>
-                Find out where the map is
-              </p>
-              <p>
-                10h
-              </p>
-              <p>
-                20/4/2023
-              </p>
-              <ul>
-                <li>
-                  <p>
-                    Gather food for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find friends for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find the map
-                  </p>
-                  <p>
-                    6h
-                  </p>
-                </li>
-              </ul>
-            </section>
-          </div><!-- Card -->
-        </section>
-      </div>
-      <div class="lane" style="--laneColor: #6e6">
-        <h3>
-          Doing
-        </h3>
-        <section class="laneSection">
-          <h4>
-            Me!
-          </h4>
-          <div class="card" draggable="true">
-            <section>
-              <p>
-                Im a great title
-              </p>
-              <p>
-                Get the treasure map for captain Morgans long lost rum vault
-              </p>
-              <p>
-                Me
+                {{card.assigned}}
               </p>
             </section>
-            <section style="display: none;">
-              <p>
-                Find out where the map is
-              </p>
-              <p>
-                10h
-              </p>
-              <p>
-                20/4/2023
-              </p>
-              <ul>
-                <li>
-                  <p>
-                    Gather food for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find friends for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find the map
-                  </p>
-                  <p>
-                    6h
-                  </p>
-                </li>
-              </ul>
-            </section>
-          </div><!-- Card -->
-        </section>
-        <section class="laneSection">
-          <h4>
-            Other people
-          </h4>
-          <div class="card" draggable="true">
-            <section>
-              <p>
-                Im a great title
-              </p>
-              <p>
-                Get the treasure map for captain Morgans long lost rum vault
-              </p>
-              <p>
-                Markus
-              </p>
-            </section>
-            <section style="display: none;">
-              <p>
-                Find out where the map is
-              </p>
-              <p>
-                10h
-              </p>
-              <p>
-                20/4/2023
-              </p>
-              <ul>
-                <li>
-                  <p>
-                    Gather food for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find friends for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find the map
-                  </p>
-                  <p>
-                    6h
-                  </p>
-                </li>
-              </ul>
-            </section>
-          </div><!-- Card -->
-        </section>
-      </div>
-      <div class="lane" style="--laneColor: #66e">
-        <h3>
-          Done
-        </h3>
-        <section class="laneSection">
-          <div class="card" draggable="true">
-            <section>
-              <p>
-                Im a great title
-              </p>
-              <p>
-                Get the treasure map for captain Morgans long lost rum vault
-              </p>
-              <p>
-                Me
-              </p>
-            </section>
-            <section style="display: none;">
-              <p>
-                Find out where the map is
-              </p>
-              <p>
-                10h
-              </p>
-              <p>
-                20/4/2023
-              </p>
-              <ul>
-                <li>
-                  <p>
-                    Gather food for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find friends for the trip
-                  </p>
-                  <p>
-                    2h
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Find the map
-                  </p>
-                  <p>
-                    6h
-                  </p>
-                </li>
-              </ul>
-            </section>
-          </div><!-- Card -->
+          </div>
         </section>
       </div>
     </section>
