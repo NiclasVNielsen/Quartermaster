@@ -116,8 +116,6 @@ const boardData = ref([
 ])
 
 const transferCardToNewBoard = (cardId, subLaneId) => {
-  console.log(cardId, subLaneId)
-
   //? CTRL X the card from its original position
   let cardCopy;
   boardData.value.forEach(lane => {
@@ -145,7 +143,6 @@ const transferCardToNewBoard = (cardId, subLaneId) => {
 } 
 
 onMounted(() => {
-  let cards = document.querySelectorAll(".card")
   let laneSecs = document.querySelectorAll(".laneSection")
 
   let cardBeingDragged;
@@ -169,8 +166,7 @@ onMounted(() => {
 
 
   const startDrag = (e) => {
-    cardBeingDragged = e.target.querySelector(".cardId").innerHTML 
-    console.log(e.target.querySelector(".cardId").innerHTML)
+    cardBeingDragged = e.target.querySelector(".cardId").innerHTML
   }
   const preventDef = (e) => {
     e.preventDefault()
