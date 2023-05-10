@@ -1,5 +1,36 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const cards = document.querySelectorAll(".card")
+  const laneSecs = document.querySelectorAll(".laneSection")
+
+  cards.forEach(card => {/* dragend */
+    //? Drag Start
+    card.addEventListener("dragstart", () => {
+      console.log("Drag started")
+    })
+  })
+
+  laneSecs.forEach(laneSec => {/* dragenter, dragleave */
+    //? Drag Over
+    laneSec.addEventListener("dragover", (e) => {
+      e.preventDefault()
+    })
+
+    //? Drop
+    laneSec.addEventListener("drop", (e) => {
+      e.preventDefault()
+      console.log("Card dropped")
+      console.log(e)
+    })
+  })
+
+})
+
+
+
 </script>
 
 <template>
@@ -11,7 +42,7 @@ import SideNav from '../components/SideNav.vue'
           ToDo
         </h3>
         <section class="laneSection">
-          <div class="card">
+          <div class="card" draggable="true">
             <section>
               <p>
                 Im a great title
@@ -71,7 +102,7 @@ import SideNav from '../components/SideNav.vue'
           <h4>
             Me!
           </h4>
-          <div class="card">
+          <div class="card" draggable="true">
             <section>
               <p>
                 Im a great title
@@ -126,7 +157,7 @@ import SideNav from '../components/SideNav.vue'
           <h4>
             Other people
           </h4>
-          <div class="card">
+          <div class="card" draggable="true">
             <section>
               <p>
                 Im a great title
@@ -183,7 +214,7 @@ import SideNav from '../components/SideNav.vue'
           Done
         </h3>
         <section class="laneSection">
-          <div class="card">
+          <div class="card" draggable="true">
             <section>
               <p>
                 Im a great title
