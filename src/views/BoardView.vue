@@ -115,7 +115,6 @@ const boardData = ref([
   },
 ])
 
-console.log("After init", boardData.value)
 
 const transferCardToNewBoard = (cardId, subLaneId) => {
   //? CTRL X the card from its original position
@@ -143,8 +142,6 @@ const transferCardToNewBoard = (cardId, subLaneId) => {
 } 
 
 onMounted(() => {
-  console.log("Mounted", boardData.value)
-
   let laneSecs = document.querySelectorAll(".laneSection")
 
   let cardBeingDragged;
@@ -169,7 +166,6 @@ onMounted(() => {
 
 
   const startDrag = (e) => {
-    console.log("Drag start", boardData.value)
     cardBeingDragged = e.target.querySelector(".cardId").innerHTML
 
     boardData.value.forEach(lane => {
@@ -193,6 +189,7 @@ onMounted(() => {
     e.preventDefault()
 
     let laneSecId = null 
+    let droppedOnCard = false;
     
     //? i could not pass laneSecId along with an event for some reason
     //? so i had to do this again...
@@ -210,7 +207,7 @@ onMounted(() => {
               lane.subLanes.forEach(subLane => {
                 subLane.cards.forEach(card => {
                   if(cardId == card.id){
-                    console.log(cardId)
+                    /* console.log(cardId) */
                     const dropLocation = {
                       "laneId": lane.id,
                       "subLaneId": subLane.id,
@@ -218,23 +215,54 @@ onMounted(() => {
                       "cardOrder": card.order
                     }
 
+                    //? -1 order to all cards below the object dragged onto, to make space for a new card
                     subLane.cards.forEach(card => {
                       if(card.order < dropLocation.cardOrder){
                         card.order = card.order - 1
-                        console.log("Worked")
+                        /* console.log("Worked") */
                       }
                     })
 
-                    console.log("boardData.value")
-                    console.log(cardBeingDraggedLocation)
-                    console.log(boardData.value)
-                    console.log(boardData.value.find(lane => lane.id = cardBeingDraggedLocation.laneId))
-                    /* .find(lane => lane.id = cardBeingDraggedLocation.laneId)
-                    .find(subLane => subLane.id = cardBeingDraggedLocation.subLaneId)
-                    .find(card => card.id = cardBeingDraggedLocation.cardId)
-                    .order = dropLocation.cardOrder - 1 */
 
-                    /* cardBeingDraggedLocation use this */
+                    //? Change order of the dragged object to -1 of the object it's dragged onto
+                    boardData.value.forEach(lane => {
+                      if(lane.id == cardBeingDraggedLocation.laneId){
+                        lane.subLanes.forEach(subLane => {
+                          if(subLane.id == cardBeingDraggedLocation.subLaneId){
+                            subLane.cards.forEach(card => {
+                              if(card.id == cardBeingDraggedLocation.cardId){
+                                card.order = dropLocation.cardOrder - 1
+                              }
+                            })
+                          }
+                        })
+                      }
+                    })
+
+                    //? Transfer card
+                    transferCardToNewBoard(cardBeingDragged, laneSecId)
+
+                    //? Reorder the subLane
+                    const compareOrdersAsc = (a, b) => {
+                      if(a.order < b.order){
+                        return -1
+                      }
+                      if(a.order > b.order){
+                        return 1
+                      }
+                      return 0
+                    }
+                    subLane.cards.sort(compareOrdersAsc)
+                    
+                    //? Prettify the order numbers
+                    subLane.cards.forEach((card, index) => {
+                      card.order = index
+                    })
+
+                    resetEventListeners()
+                    //! Auto update db here
+
+                    droppedOnCard = true;
                   }
                 })
               })
@@ -244,8 +272,20 @@ onMounted(() => {
       }
     })
     
-    if(laneSecId != null){
+    if(droppedOnCard == false && laneSecId != null){
       transferCardToNewBoard(cardBeingDragged, laneSecId)
+
+      boardData.value.forEach(lane => {
+        lane.subLanes.forEach(subLane => {
+          if(subLane.id == laneSecId){
+            //? Prettify the order numbers
+            subLane.cards.forEach((card, index) => {
+              card.order = index
+            })
+          }
+        })
+      })
+      
       resetEventListeners()
       //! Auto update db here
     }
