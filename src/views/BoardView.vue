@@ -115,6 +115,8 @@ const boardData = ref([
   },
 ])
 
+console.log("After init", boardData.value)
+
 const transferCardToNewBoard = (cardId, subLaneId) => {
   //? CTRL X the card from its original position
   let cardCopy;
@@ -138,14 +140,15 @@ const transferCardToNewBoard = (cardId, subLaneId) => {
       }
     })
   });
-
-  //! array is not 2-way-binded, it works but the page dosent update
 } 
 
 onMounted(() => {
+  console.log("Mounted", boardData.value)
+
   let laneSecs = document.querySelectorAll(".laneSection")
 
   let cardBeingDragged;
+  let cardBeingDraggedLocation;
 
 
 
@@ -166,7 +169,22 @@ onMounted(() => {
 
 
   const startDrag = (e) => {
+    console.log("Drag start", boardData.value)
     cardBeingDragged = e.target.querySelector(".cardId").innerHTML
+
+    boardData.value.forEach(lane => {
+      lane.subLanes.forEach(subLane => {
+        subLane.cards.forEach(card => {
+          if(cardBeingDragged == card.id){
+            cardBeingDraggedLocation = {
+              "laneId": lane.id,
+              "subLaneId": subLane.id,
+              "cardId": card.id
+            }
+          }
+        })
+      })
+    })
   }
   const preventDef = (e) => {
     e.preventDefault()
@@ -181,6 +199,48 @@ onMounted(() => {
     laneSecs.forEach(laneSec => {
       if(laneSec.contains(e.target)){
         laneSecId = laneSec.querySelector(".laneSecId").innerHTML
+        
+
+        const laneSecCards = laneSec.querySelectorAll(".card")
+        laneSecCards.forEach(laneSecCard => {
+          if(laneSecCard.contains(e.target)){
+            const cardId = laneSecCard.querySelector(".cardId").innerHTML
+
+            boardData.value.forEach(lane => {
+              lane.subLanes.forEach(subLane => {
+                subLane.cards.forEach(card => {
+                  if(cardId == card.id){
+                    console.log(cardId)
+                    const dropLocation = {
+                      "laneId": lane.id,
+                      "subLaneId": subLane.id,
+                      "cardId": card.id,
+                      "cardOrder": card.order
+                    }
+
+                    subLane.cards.forEach(card => {
+                      if(card.order < dropLocation.cardOrder){
+                        card.order = card.order - 1
+                        console.log("Worked")
+                      }
+                    })
+
+                    console.log("boardData.value")
+                    console.log(cardBeingDraggedLocation)
+                    console.log(boardData.value)
+                    console.log(boardData.value.find(lane => lane.id = cardBeingDraggedLocation.laneId))
+                    /* .find(lane => lane.id = cardBeingDraggedLocation.laneId)
+                    .find(subLane => subLane.id = cardBeingDraggedLocation.subLaneId)
+                    .find(card => card.id = cardBeingDraggedLocation.cardId)
+                    .order = dropLocation.cardOrder - 1 */
+
+                    /* cardBeingDraggedLocation use this */
+                  }
+                })
+              })
+            })
+          }
+        })
       }
     })
     
