@@ -157,7 +157,7 @@ onMounted(() => {
       card.removeEventListener("dragstart", startDrag)
     })
     laneSecs.forEach(laneSec => {
-      laneSec.removeEventListener("dragover", preventDef)
+      laneSec.removeEventListener("dragover", dragOver)
       laneSec.removeEventListener("drop", dropDrag)
     })
     addEventListeners()
@@ -182,11 +182,18 @@ onMounted(() => {
       })
     })
   }
-  const preventDef = (e) => {
+  const dragOver = (e) => {
     e.preventDefault()
   }
   const dropDrag = (e) => {
     e.preventDefault()
+
+    //? To fix some issues with the hover
+    document.querySelectorAll(".card.hover").forEach(card => {
+      card.classList.remove("hover")
+    })
+
+
 
     let laneSecId = null 
     let droppedOnCard = false;
@@ -289,6 +296,7 @@ onMounted(() => {
       resetEventListeners()
       //! Auto update db here
     }
+
   }
 
 
@@ -304,7 +312,7 @@ onMounted(() => {
   
     laneSecs.forEach(laneSec => {
       //? Drag Over
-      laneSec.addEventListener("dragover", preventDef)
+      laneSec.addEventListener("dragover", dragOver)
   
       //? Drop
       laneSec.addEventListener("drop", dropDrag)
@@ -328,8 +336,8 @@ onMounted(() => {
           <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
             <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
             <h4>{{ subLane.title }}</h4>
-            <div class="card" draggable="true" v-for="card in subLane.cards" :key="card">
-              <section>
+            <div class="card" ondragover="this.classList.add('hover')" ondragleave="this.classList.remove('hover')" draggable="true" v-for="card in subLane.cards" :key="card">
+              <section style="pointer-events: none;">
                 <i class="cardId" style="display: none">{{card.id}}</i>
                 <i class="cardOrder" style="display: none">{{card.order}}</i>
                 <p>
@@ -373,8 +381,15 @@ onMounted(() => {
         border: solid 4px var(--laneColor)
         border-radius: 10px
         padding: 5px
+        background: #eee
+        transition: 300ms
+        &.hover
+          margin-top: 3em
+          
       &:nth-of-type(odd)
         background: var(--neutralBg)
+      p
+        pointer-events: none
         
 
 </style>
