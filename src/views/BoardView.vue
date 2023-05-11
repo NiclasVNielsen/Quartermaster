@@ -13,12 +13,12 @@ const boardData = ref([
       {
         id: 1,
         order: 1,
-        title: "Me",
+        title: "",
         cards: [
           {
             id: 1,
             order: 1,
-            title: "Im a great title",
+            title: "Im a greeeeeat title",
             desc: "Get the treasure map for captain Morgans long lost rum vault",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
@@ -96,13 +96,13 @@ const boardData = ref([
       {
         id: 4,
         order: 1,
-        title: "Me",
+        title: "",
         cards: [
           {
             id: 6,
             order: 1,
             title: "Find out where the map is",
-            desc: "Find captain morgans treassure map :3",
+            desc: "Find captain morgans treasure map :3",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
               3, 5, 6
@@ -330,8 +330,8 @@ onMounted(() => {
             <h4>{{ subLane.title }}</h4>
             <div class="card" draggable="true" v-for="card in subLane.cards" :key="card">
               <section>
-                <i class="cardId" style="display: block">{{card.id}}</i>
-                <i class="cardOrder" style="display: block">{{card.order}}</i>
+                <i class="cardId" style="display: none">{{card.id}}</i>
+                <i class="cardOrder" style="display: none">{{card.order}}</i>
                 <p>
                   {{card.title}}
                 </p>
