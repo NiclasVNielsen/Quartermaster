@@ -149,7 +149,7 @@ onMounted(() => {
 
 
 
-  const resetEventlisteners = () => {
+  const resetEventListeners = () => {
     let cards = document.querySelectorAll(".card")
     let laneSecs = document.querySelectorAll(".laneSection")
     
@@ -186,7 +186,7 @@ onMounted(() => {
     
     if(laneSecId != null){
       transferCardToNewBoard(cardBeingDragged, laneSecId)
-      resetEventlisteners()
+      resetEventListeners()
       //! Auto update db here
     }
   }
@@ -224,25 +224,27 @@ onMounted(() => {
       <div class="lane" :style="{ '--laneColor': lane.color }" v-for="lane in boardData" :key="lane">
         <i class="laneId" style="display: none">{{ lane.id }}</i>
         <h3>{{ lane.title }}</h3>
-        <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
-          <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
-          <h4>{{ subLane.title }}</h4>
-          <div class="card" draggable="true" v-for="card in subLane.cards" :key="card">
-            <section>
-              <i class="cardId" style="display: block">{{card.id}}</i>
-              <i class="cardOrder" style="display: block">{{card.order}}</i>
-              <p>
-                {{card.title}}
-              </p>
-              <p>
-                {{card.desc}}
-              </p>
-              <p>
-                {{card.assigned}}
-              </p>
-            </section>
-          </div>
-        </section>
+        <div>
+          <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
+            <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
+            <h4>{{ subLane.title }}</h4>
+            <div class="card" draggable="true" v-for="card in subLane.cards" :key="card">
+              <section>
+                <i class="cardId" style="display: block">{{card.id}}</i>
+                <i class="cardOrder" style="display: block">{{card.order}}</i>
+                <p>
+                  {{card.title}}
+                </p>
+                <p>
+                  {{card.desc}}
+                </p>
+                <p>
+                  {{card.assigned}}
+                </p>
+              </section>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
   </main>
@@ -257,6 +259,13 @@ onMounted(() => {
     background: #EEE
     margin: 10px
     padding: 10px
+    >div
+      height: calc(100% - .5em)
+      display: flex
+      flex-direction: column
+      >section
+        flex: 1
+        overflow-y: scroll
     h3
       color: var(--laneColor)
     .laneSection
