@@ -1,5 +1,6 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
+import Footer from '../components/FooterComponent.vue'
 import { onMounted, ref } from 'vue';
 
 const boardData = ref([
@@ -335,7 +336,7 @@ onMounted(() => {
         <div>
           <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
             <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
-            <h4>{{ subLane.title }}</h4>
+            <h4 v-if="subLane.title != ''">{{ subLane.title }}</h4>
             <div class="card" ondragover="this.classList.add('hover')" ondragleave="this.classList.remove('hover')" draggable="true" v-for="card in subLane.cards" :key="card">
               <section style="pointer-events: none;">
                 <i class="cardId" style="display: none">{{card.id}}</i>
@@ -356,17 +357,24 @@ onMounted(() => {
       </div>
     </section>
   </main>
+  <Footer />
 </template>
 
 <style scoped lang="sass">
-    
+
+main
+  >section
+    width: 100%
+    overflow-x: scroll
+    overflow-y: hidden
+    padding-bottom: 0
+    height: 100vh
+
 .boardContainer
   display: flex
   .lane
     width: 300px
-    background: #EEE
-    margin: 10px
-    padding: 10px
+    height: 100%
     >div
       height: calc(100% - .5em)
       display: flex
@@ -376,18 +384,45 @@ onMounted(() => {
         overflow-y: scroll
     h3
       color: var(--laneColor)
+      background: var(--sandBg)
+      padding: 10px 10px
+      margin-bottom: 5px
+      border-bottom: solid 3px var(--darkSandBg)
+    &:first-of-type
+      margin-left: 10px
+      >h3
+        border-radius: 20px 0 0 20px
+        border-left: solid 3px var(--darkSandBg)
+    &:last-of-type
+      >h3
+        border-radius: 0 20px 20px 0
     .laneSection
+      h4
+        color: var(--darkText)
+        background: var(--sandBg)
+        border-radius: 20px
+        padding: 5px 10px
+        border-bottom: solid 3px var(--darkSandBg)
+        border-left: solid 3px var(--darkSandBg)
+        //box-shadow: var(--darkText) 0 0 18px -10px
+        margin-bottom: 4px
       .card
-        border: solid 4px var(--laneColor)
-        border-radius: 10px
-        padding: 5px
-        background: #eee
+        color: var(--darkText)
+        background: var(--sandBg)
+        border-bottom: solid 3px var(--laneColor)
+        border-left: solid 3px var(--laneColor)
+        margin-bottom: 4px
+        box-shadow: var(--darkText) 0 0 18px -10px
+        border-radius: 20px
+        padding: 10px
         transition: 300ms
         &.hover
           margin-top: 3em
+        &:nth-of-type(even)
+          background: #fcfbf8
           
-      &:nth-of-type(odd)
-        background: var(--neutralBg)
+      //&:nth-of-type(odd)
+        //background: var(--neutralBg)
       p
         pointer-events: none
         
