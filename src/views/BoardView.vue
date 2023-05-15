@@ -194,11 +194,24 @@ const checkForReliance = (cardId) => {
 
   let card = findCardInFrontend(cardId)
   if(positiveResult == false){
-    card.style.opacity="0.4"
+    card.classList.add("disabled")
     card.setAttribute('draggable', false)
+
+
+    card.querySelectorAll(".completeList > p").forEach((listItem, index) => {
+      if(results[index] == true){
+        listItem.classList.add("checked")
+      }else{
+        listItem.classList.remove("checked")
+      }
+    })
   }else{
-    card.style.opacity="1"
+    card.classList.remove("disabled")
     card.setAttribute('draggable', true)
+
+    card.querySelectorAll(".completeList > p").forEach(listItem => {
+      listItem.classList.remove("checked")
+    })
   }
 }
 
@@ -444,6 +457,13 @@ onMounted(() => {
                 <p>
                   {{card.assigned}}
                 </p>
+                <div class="completeList">
+                  <br>
+                  Complete before this:
+                  <p v-for="required in card.require" :key="required">
+                    *&nbsp;{{ findCardInBoardData(required).title }}
+                  </p>
+                </div>
               </section>
             </div>
           </section>
@@ -510,10 +530,21 @@ main
         border-radius: 20px
         padding: 10px
         transition: 300ms
+        .completeList
+          display: none
         &.hover
           margin-top: 3em
         &:nth-of-type(even)
           background: #fcfbf8
+        &.disabled
+          opacity: 0.66
+          .completeList
+            display: block
+            color: var(--darkTextHighlight)
+            p
+              color: var(--darkTextHighlight)
+              &.checked
+                text-decoration: line-through
           
       //&:nth-of-type(odd)
         //background: var(--neutralBg)
