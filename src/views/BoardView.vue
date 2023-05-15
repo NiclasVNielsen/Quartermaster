@@ -1,7 +1,7 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
-import { onMounted, ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 
 const boardData = ref([
   {
@@ -23,7 +23,7 @@ const boardData = ref([
             desc: "Get the treasure map for captain Morgans long lost rum vault",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
-              3, 5, 6
+              3, 8, 6
             ],
             time: 600 /* in minutes */
           }
@@ -50,7 +50,7 @@ const boardData = ref([
             desc: "Get the treasure map for captain Morgans long lost rum vault",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
-              15, 5, 6
+              
             ],
             time: 600 /* in minutes */
           },
@@ -61,7 +61,7 @@ const boardData = ref([
             desc: "Get the treasure map for captain Morgans long lost rum vault",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
-              3
+              
             ],
             time: 600 /* in minutes */
           }
@@ -79,7 +79,7 @@ const boardData = ref([
             desc: "Get MORE treasure maps for random stuff!",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
-              1
+              
             ],
             time: 1200 /* in minutes */
           }
@@ -106,7 +106,7 @@ const boardData = ref([
             desc: "Find captain morgans treasure map :3",
             assigned: "64350f1e176e8ddbc40d37f4",
             require: [
-              3, 5, 6
+              
             ],
             time: 600 /* in minutes */
           }
@@ -117,30 +117,90 @@ const boardData = ref([
 ])
 
 
-const transferCardToNewBoard = (cardId, subLaneId) => {
-  //? CTRL X the card from its original position
-  let cardCopy;
+const findCardInBoardData = (cardId) => {
+  let theNeededCard
   boardData.value.forEach(lane => {
     lane.subLanes.forEach(subLane => {
       subLane.cards.forEach(card => {
-        if(card.id == cardId){
-          cardCopy = card
-          const cardArrayId = subLane.cards.indexOf(card)
-          subLane.cards.splice(cardArrayId, 1)
+        if(cardId == card.id){
+          theNeededCard = card
         }
       })
     })
-  });
+  })
+  return theNeededCard
+}
 
-  //? Paste the card where it needs to go
+const findCardInFrontend = (cardId) => {
+  const cards = document.querySelectorAll(".card")
+  let theNeededCard
+
+  cards.forEach(card => {
+    if(card.querySelector(".cardId").innerHTML == cardId){
+      theNeededCard = (card)
+    }
+  })
+
+  return theNeededCard
+}
+
+const getAllCardIds = () => {
+  let allCards = []
   boardData.value.forEach(lane => {
     lane.subLanes.forEach(subLane => {
-      if(subLane.id == subLaneId){
-        subLane.cards.push(cardCopy)
-      }
+      subLane.cards.forEach(card => {
+        allCards.push(card.id)
+      })
     })
-  });
-} 
+  })
+  return allCards
+}
+
+
+
+const checkForReliance = (cardId) => {
+  let requiredCardsIds = []
+  const results = []
+
+  //? find the card in array and get the required list
+  requiredCardsIds = findCardInBoardData(cardId).require
+  
+  //? find the required cards and check lane categories
+  const subLanes = document.querySelectorAll(".laneSection")
+  subLanes.forEach(subLane => {
+    const category = subLane.querySelector(".laneCategory")
+    const cards = subLane.querySelectorAll(".card")
+
+    //? goes through each card and check if their id match any in
+    //? of the ones in requiredCardsIds, when it finds a match
+    //? insert true or false into results depending on the
+    //? lane category is "done" or not
+    cards.forEach(card => {
+      requiredCardsIds.forEach(requiredCardId => {
+        if(card.querySelector(".cardId").innerHTML == requiredCardId){
+          results.push(category.innerHTML == "done")
+        }
+      })
+    })
+  })
+  
+  //? Disable if needed
+  let positiveResult = true
+  results.forEach(result => {
+    if(result == false){
+      positiveResult = false
+    }
+  })
+
+  let card = findCardInFrontend(cardId)
+  if(positiveResult == false){
+    card.style.opacity="0.4"
+    card.setAttribute('draggable', false)
+  }else{
+    card.style.opacity="1"
+    card.setAttribute('draggable', true)
+  }
+}
 
 onMounted(() => {
   let laneSecs = document.querySelectorAll(".laneSection")
@@ -148,23 +208,42 @@ onMounted(() => {
   let cardBeingDragged;
   let cardBeingDraggedLocation;
 
+  getAllCardIds().forEach(cardId => {
+    checkForReliance(cardId)
+  })
 
+  const transferCardToNewBoard = async (cardId, subLaneId) => {
+    //? CTRL X the card from its original position
+    let cardCopy;
+    boardData.value.forEach(lane => {
+      lane.subLanes.forEach(subLane => {
+        subLane.cards.forEach(card => {
+          if(card.id == cardId){
+            cardCopy = card
+            const cardArrayId = subLane.cards.indexOf(card)
+            subLane.cards.splice(cardArrayId, 1)
+          }
+        })
+      })
+    });
 
-  const resetEventListeners = () => {
-    let cards = document.querySelectorAll(".card")
-    let laneSecs = document.querySelectorAll(".laneSection")
-    
-    cards.forEach(card => {
-      card.removeEventListener("dragstart", startDrag)
-    })
-    laneSecs.forEach(laneSec => {
-      laneSec.removeEventListener("dragover", dragOver)
-      laneSec.removeEventListener("drop", dropDrag)
-    })
-    addEventListeners()
+    //? Paste the card where it needs to go
+    boardData.value.forEach(lane => {
+      lane.subLanes.forEach(subLane => {
+        if(subLane.id == subLaneId){
+          subLane.cards.push(cardCopy)
+
+          //? Just don't question it - it doesn't work without the setTimeout
+          setTimeout(() => {
+            findCardInFrontend(cardCopy.id).addEventListener("dragstart", startDrag)
+          }, 0);
+        }
+      })
+    });
+    resetEventListeners()
   }
 
-
+  
 
   const startDrag = (e) => {
     cardBeingDragged = e.target.querySelector(".cardId").innerHTML
@@ -215,7 +294,6 @@ onMounted(() => {
               lane.subLanes.forEach(subLane => {
                 subLane.cards.forEach(card => {
                   if(cardId == card.id){
-                    /* console.log(cardId) */
                     const dropLocation = {
                       "laneId": lane.id,
                       "subLaneId": subLane.id,
@@ -227,7 +305,6 @@ onMounted(() => {
                     subLane.cards.forEach(card => {
                       if(card.order < dropLocation.cardOrder){
                         card.order = card.order - 1
-                        /* console.log("Worked") */
                       }
                     })
 
@@ -295,13 +372,31 @@ onMounted(() => {
       })
       
       resetEventListeners()
+
+      setTimeout(() => {
+        getAllCardIds().forEach(cardId => {
+          checkForReliance(cardId)
+        })
+      }, 0);
       //! Auto update db here
     }
 
   }
 
 
-
+  const resetEventListeners = () => {
+    let cards = document.querySelectorAll(".card")
+    let laneSecs = document.querySelectorAll(".laneSection")
+    
+    cards.forEach(card => {
+      card.removeEventListener("dragstart", startDrag)
+    })
+    laneSecs.forEach(laneSec => {
+      laneSec.removeEventListener("dragover", dragOver)
+      laneSec.removeEventListener("drop", dropDrag)
+    })
+    addEventListeners()
+  }
   const addEventListeners = () => {
     let cards = document.querySelectorAll(".card")
     let laneSecs = document.querySelectorAll(".laneSection")
@@ -322,8 +417,6 @@ onMounted(() => {
   addEventListeners()
 })
 
-
-
 </script>
 
 <template>
@@ -336,6 +429,7 @@ onMounted(() => {
         <div>
           <section class="laneSection" v-for="subLane in lane.subLanes" :key="subLane">
             <i class="laneSecId" style="display: none">{{ subLane.id }}</i>
+            <i class="laneCategory" style="display: none">{{ lane.category }}</i>
             <h4 v-if="subLane.title != ''">{{ subLane.title }}</h4>
             <div class="card" ondragover="this.classList.add('hover')" ondragleave="this.classList.remove('hover')" draggable="true" v-for="card in subLane.cards" :key="card">
               <section style="pointer-events: none;">

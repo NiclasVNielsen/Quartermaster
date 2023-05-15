@@ -14,44 +14,9 @@ const logout = () => {
 
 <template>
   <footer>
-    <nav>
-      <div>
-        <RouterLink to="/">Home</RouterLink>
-      </div>
-      
-      <!-- If logged in { -->
-      <template v-if="isLoggedIn">
-        <ul>
-          <li>
-            <!-- Companies -->
-            <RouterLink to="/companies">Companies</RouterLink>
-          </li>
-          <li>
-            <!-- Projects -->
-            <RouterLink to="/projects">Projects</RouterLink>
-          </li>
-          <li>
-            <!-- Boards -->
-            <RouterLink to="/boards">Boards</RouterLink>
-          </li>
-        </ul>
-        <div>
-          <button @click="logout">
-            log out
-          </button>
-        </div>
-      <!-- } -->
-      </template>
-
-      <!-- else { -->
-      <template v-else>
-        <div>
-          <RouterLink to="/login">Login</RouterLink>
-          <RouterLink to="/signup">Sign up</RouterLink>
-        </div>
-      <!-- } -->
-      </template>
-    </nav>
+    <p>
+      This footer currently serves no purpose :3
+    </p>
   </footer>
 </template>
 
