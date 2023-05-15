@@ -117,6 +117,14 @@ const boardData = ref([
 ])
 
 
+const boardMembersId = ['64350f1e176e8ddbc40d37f4']
+const boardMembersName = ['Me']
+
+const turnUserIdToName = (id) => {
+  return boardMembersName[boardMembersId.indexOf(id)]
+}
+
+
 const findCardInBoardData = (cardId) => {
   let theNeededCard
   boardData.value.forEach(lane => {
@@ -457,12 +465,9 @@ onMounted(() => {
                 <p>
                   {{card.title}}
                 </p>
-                <p>
+                <!-- <p>
                   {{card.desc}}
-                </p>
-                <p>
-                  {{card.assigned}}
-                </p>
+                </p> -->
                 <div class="completeList">
                   <br>
                   Complete before this:
@@ -470,6 +475,10 @@ onMounted(() => {
                     *&nbsp;{{ findCardInBoardData(required).title }}
                   </p>
                 </div>
+                <p>
+                  <br>
+                  Assigned to: {{ turnUserIdToName(card.assigned) }}
+                </p>
               </section>
             </div>
           </section>
