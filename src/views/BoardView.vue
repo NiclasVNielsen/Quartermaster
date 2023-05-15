@@ -358,6 +358,12 @@ onMounted(() => {
                     })
 
                     resetEventListeners()
+
+                    setTimeout(() => {
+                      getAllCardIds().forEach(cardId => {
+                        checkForReliance(cardId)
+                      })
+                    }, 0);
                     //! Auto update db here
 
                     droppedOnCard = true;
