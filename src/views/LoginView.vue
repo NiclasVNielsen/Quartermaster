@@ -14,7 +14,7 @@ const errorMessage = ref()
 const login = (e) => {
   e.preventDefault()
   fetch(
-    "https://quartermasterapi.onrender.com/api/auth/login/",
+    "http://localhost:4000/api/auth/login/",
     {
       method: "POST",
       headers: {
@@ -32,6 +32,7 @@ const login = (e) => {
       localStorage.setItem("email", email.value)
       localStorage.setItem("isLoggedIn", true) /* <- ? should be edited not made */
       data.json().then(newData => {
+        localStorage.setItem("id", newData.data.id)
         localStorage.setItem("token", newData.data.token)
       })
       

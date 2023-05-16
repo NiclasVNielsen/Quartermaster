@@ -11,6 +11,7 @@ const logout = () => {
   localStorage.removeItem("isLoggedIn")
   localStorage.removeItem("email")
   localStorage.removeItem("token")
+  localStorage.removeItem("id")
   
   router.push("/")
   //location.reload();
