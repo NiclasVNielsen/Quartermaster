@@ -2,8 +2,9 @@
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
 import { onMounted, onUpdated, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-
+const route = useRoute()
 
 const boardData = ref([])
 
@@ -230,7 +231,7 @@ const checkForReliance = (cardId) => {
 
 onMounted(() => {
   const loadData = () => {
-    fetch("https://quartermasterapi.onrender.com/api/boards/64632967ecf9a5103ad33e11", {
+    fetch("https://quartermasterapi.onrender.com/api/boards/" + route.params.id, {
       headers: {
         "auth-token": localStorage.getItem("token")
       }
