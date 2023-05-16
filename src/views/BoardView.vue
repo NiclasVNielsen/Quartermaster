@@ -1,7 +1,7 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
-import { onMounted, onUpdated, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
@@ -234,27 +234,17 @@ const checkForReliance = (cardId) => {
 
 
 const postDataToDB = () => {
-  console.log("WEEEEEEEEEEEEEEEEE")
-  console.log(board.value)
-  fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
+  fetch("http://localhost:4000/api/boards/" + boardId, {
     method: "PUT",
     headers: {
-      "auth-token": localStorage.getItem("token")
+      "auth-token": localStorage.getItem("token"),
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
+    body: JSON.stringify({ 
       title: board.value.title,
       members: board.value.members,
       board: board.value.board
     })
-  })
-  .then(x => {
-    console.log("anything?")
-    console.log(JSON.stringify({
-      title: board.value.title,
-      members: board.value.members,
-      board: board.value.board
-    }))
-    console.log(x.json())
   })
 }
 
