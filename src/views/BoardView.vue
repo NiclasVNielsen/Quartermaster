@@ -3,7 +3,12 @@ import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
 import { onMounted, onUpdated, ref } from 'vue';
 
-const boardData = ref([
+
+
+const boardData = ref([])
+
+//* Test Data
+/* const boardData = ref([
   {
     id: 1,
     title: "ToDo",
@@ -25,7 +30,7 @@ const boardData = ref([
             require: [
               3, 8, 6
             ],
-            time: 600 /* in minutes */
+            time: 600 // in minutes
           }
         ]
       }
@@ -52,7 +57,7 @@ const boardData = ref([
             require: [
               
             ],
-            time: 600 /* in minutes */
+            time: 600 // in minutes
           },
           {
             id: 8,
@@ -63,7 +68,7 @@ const boardData = ref([
             require: [
               
             ],
-            time: 600 /* in minutes */
+            time: 600 // in minutes
           }
         ]
       },
@@ -81,7 +86,7 @@ const boardData = ref([
             require: [
               
             ],
-            time: 1200 /* in minutes */
+            time: 1200 // in minutes
           }
         ]
       },
@@ -108,14 +113,14 @@ const boardData = ref([
             require: [
               
             ],
-            time: 600 /* in minutes */
+            time: 600 // in minutes
           }
         ]
       },
     ]
   },
 ])
-
+ */
 
 const boardMembersId = ['64350f1e176e8ddbc40d37f4']
 const boardMembersName = ['Me']
@@ -224,14 +229,40 @@ const checkForReliance = (cardId) => {
 }
 
 onMounted(() => {
-  let laneSecs = document.querySelectorAll(".laneSection")
+  const loadData = () => {
+    fetch("https://quartermasterapi.onrender.com/api/boards/64632967ecf9a5103ad33e11", {
+      headers: {
+        "auth-token": localStorage.getItem("token")
+      }
+    })
+    .then(data => data.json())
+    .then(data => {
+      boardData.value = data.board
+
+      //? Board setup
+      setTimeout(() => {
+        laneSecs = document.querySelectorAll(".laneSection")
+  
+        getAllCardIds().forEach(cardId => {
+          checkForReliance(cardId)
+        })
+        
+        addEventListeners()
+      }, 0);
+    })
+  }
+
+  //? reloads the data every 5 min
+  loadData()
+  setInterval(() => {
+    loadData()
+  }, 3000000); //? 5 min
+
+  let laneSecs
 
   let cardBeingDragged;
   let cardBeingDraggedLocation;
-
-  getAllCardIds().forEach(cardId => {
-    checkForReliance(cardId)
-  })
+  
 
   const transferCardToNewBoard = async (cardId, subLaneId) => {
     //? CTRL X the card from its original position
@@ -263,7 +294,6 @@ onMounted(() => {
     });
     resetEventListeners()
   }
-
   
 
   const startDrag = (e) => {
@@ -301,6 +331,7 @@ onMounted(() => {
     
     //? i could not pass laneSecId along with an event for some reason
     //? so i had to do this again...
+    
     laneSecs.forEach(laneSec => {
       if(laneSec.contains(e.target)){
         laneSecId = laneSec.querySelector(".laneSecId").innerHTML
@@ -441,7 +472,6 @@ onMounted(() => {
       laneSec.addEventListener("drop", dropDrag)
     })
   }
-  addEventListeners()
 })
 
 </script>

@@ -30,7 +30,7 @@ const createPopup = () => {
         </h3>
         <li>
           <p class="big">
-            <RouterLink to="/board/id"> <!-- /board/id -->
+            <RouterLink to="/board/64632967ecf9a5103ad33e11"> <!-- /board/id -->
               Find Morgans rum vault!
             </RouterLink>
           </p>

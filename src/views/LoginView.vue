@@ -14,36 +14,37 @@ const errorMessage = ref()
 const login = (e) => {
   e.preventDefault()
   fetch(
-      "http://localhost:4000/api/auth/login/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.value,
-          password: password.value
-        })
-      }
-    )
-    .then(data => {
-      /* Login in user */
-      console.log(data.ok)
-      if(data.ok){
-        localStorage.setItem("email", email.value)
-        localStorage.setItem("isLoggedIn", true) /* <- ? should be edited not made */
-        localStorage.setItem("token", data)
-        
-        /* Wohooo! it worked :3 */
-        router.push('/boards')
-        return "success"
-      }else{
-        errorMessage.value = "Ehh you typed something wrong 3:"
-      }
-    })
-    .catch(error => {
-      errorMessage.value = error
-    })
+    "https://quartermasterapi.onrender.com/api/auth/login/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    }
+  )
+  .then(data => {
+    /* Login in user */
+    if(data.ok){
+      localStorage.setItem("email", email.value)
+      localStorage.setItem("isLoggedIn", true) /* <- ? should be edited not made */
+      data.json().then(newData => {
+        localStorage.setItem("token", newData.data.token)
+      })
+      
+      /* Wohooo! it worked :3 */
+      router.push('/boards')
+      return "success"
+    }else{
+      errorMessage.value = "Ehh you typed something wrong 3:"
+    }
+  })
+  .catch(error => {
+    errorMessage.value = error
+  })
 }
 </script>
 
