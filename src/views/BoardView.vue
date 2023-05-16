@@ -6,7 +6,10 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute()
 
+const board = ref([])
 const boardData = ref([])
+
+const boardId = route.params.id
 
 //* Test Data
 /* const boardData = ref([
@@ -229,15 +232,42 @@ const checkForReliance = (cardId) => {
   }
 }
 
+
+const postDataToDB = () => {
+  console.log("WEEEEEEEEEEEEEEEEE")
+  console.log(board.value)
+  fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
+    method: "PUT",
+    headers: {
+      "auth-token": localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      title: board.value.title,
+      members: board.value.members,
+      board: board.value.board
+    })
+  })
+  .then(x => {
+    console.log("anything?")
+    console.log(JSON.stringify({
+      title: board.value.title,
+      members: board.value.members,
+      board: board.value.board
+    }))
+    console.log(x.json())
+  })
+}
+
 onMounted(() => {
   const loadData = () => {
-    fetch("https://quartermasterapi.onrender.com/api/boards/" + route.params.id, {
+    fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
       headers: {
         "auth-token": localStorage.getItem("token")
       }
     })
     .then(data => data.json())
     .then(data => {
+      board.value = data
       boardData.value = data.board
 
       //? Board setup
@@ -404,7 +434,9 @@ onMounted(() => {
                         checkForReliance(cardId)
                       })
                     }, 0);
-                    //! Auto update db here
+
+                    //? Auto update db here
+                    postDataToDB()
 
                     droppedOnCard = true;
                   }
@@ -430,6 +462,9 @@ onMounted(() => {
         })
       })
       
+      //? Auto update db here
+      postDataToDB()
+
       resetEventListeners()
 
       setTimeout(() => {
@@ -437,7 +472,6 @@ onMounted(() => {
           checkForReliance(cardId)
         })
       }, 0);
-      //! Auto update db here
     }
 
   }
