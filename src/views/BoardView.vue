@@ -234,7 +234,7 @@ const checkForReliance = (cardId) => {
 
 
 const postDataToDB = () => {
-  fetch("http://localhost:4000/api/boards/" + boardId, {
+  fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
     method: "PUT",
     headers: {
       "auth-token": localStorage.getItem("token"),

@@ -14,7 +14,7 @@ const errorMessage = ref()
 const login = (e) => {
   e.preventDefault()
   fetch(
-    "http://localhost:4000/api/auth/login/",
+    "https://quartermasterapi.onrender.com/api/auth/login/",
     {
       method: "POST",
       headers: {
