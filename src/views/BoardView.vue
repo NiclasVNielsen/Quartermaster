@@ -717,6 +717,8 @@ main
   input, select
     width: 100%
     margin-bottom: 1em
+  input:first-of-type  
+    margin-bottom: 7em
 
 .popupBlock
   height: 100vh
@@ -731,11 +733,19 @@ textarea
   left: 50%
   transform: translate(-50%, 0)
   top: 4em
-  transition: 100ms
+  transition: 500ms
   & + div
-    margin-top: 6em
+    transition: 500ms
     opacity: 0
     height: 0
+    width: calc( 100% - 40px )
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    display: flex
+    align-items: center
+    justify-content: center
   &:focus
     top: calc(50% - 2.5vh)
     left: 50%
@@ -744,25 +754,22 @@ textarea
     height: 70vh
     z-index: 1001
     & + div
-      margin-top: 0
-      opacity: 1
-      padding-top: 5vh
-      display: block
-      position: absolute
       top: calc(50% + 32.5vh)
       left: 50%
       transform: translate(-50%, -50%)
+      opacity: 1
+      padding-top: 5vh
       z-index: 1000
       width: 70vw
       height: 10vh
-      display: flex
-      align-items: center
-      justify-content: center
       cursor: pointer
       background: var(--sandBg)
       border-radius: 20px
       border-left: 3px solid var(--darkSandBg)
       border-bottom: 3px solid var(--darkSandBg)
+
+select  
+  transition: 100ms
 
 select option
   border-radius: 20px
@@ -790,7 +797,6 @@ textarea, select
   padding: .5em
   background: radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg)
   color: var(--waterText)
-  transition: 100ms
   &:focus
     outline: none
     border-bottom: 3px solid var(--waterText)
