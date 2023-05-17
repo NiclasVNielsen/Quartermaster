@@ -26,6 +26,9 @@ import { RouterView } from 'vue-router'
   font-size: 16px
   font-family: Arial, Helvetica, sans-serif
 
+::selection
+  background: var(--waterTextHighlight)
+
 main
   display: flex
   align-items: stretch
@@ -85,7 +88,7 @@ input
     left: 50%
     transform: translate(-50%, -50%)
     width: 500px
-    height: 400px
+    min-height: 400px
     max-width: 90%
     max-height: 90vh
     background: var(--sandBg) /* radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg) */

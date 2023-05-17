@@ -141,6 +141,7 @@ aside
           >span
             display: block
             text-align: center
+            cursor: pointer
             &:first-of-type
               font-size: 3.5em
               margin-top: 25px

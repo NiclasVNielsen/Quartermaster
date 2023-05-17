@@ -499,10 +499,86 @@ onMounted(() => {
   }
 })
 
+const fillOutPopup = (card) => {
+  console.log(document.querySelectorAll(".card .cardId"))
+  currentCardIds = Array.from(document.querySelectorAll(".card .cardId")).map(x => x.innerHTML)
+  currentCardTitles = Array.from(document.querySelectorAll(".card > section > p:first-of-type")).map(x => x.innerHTML)
+
+  popupCardData.value.id = card.id
+  popupCardData.value.title = card.title
+  popupCardData.value.desc = card.desc
+  popupCardData.value.time = card.time
+  popupCardData.value.require = card.require
+  popupCardData.value.assigned = card.assigned
+}
+
+let currentCardIds = []
+let currentCardTitles = []
+
+const popupCardData = ref({
+  id: "",
+  title: "Title",
+  desc: "Desc",
+  time: 600,
+  require: [],
+  assigned: "64350f1e176e8ddbc40d37f4"
+})
+
+const togglePopup = async (e, card = false) => {
+  const popup = document.querySelector(".popup")
+
+  if(card != false){
+    fillOutPopup(card)
+    popup.classList.remove("off");
+  }else{
+    popup.classList.add("off");
+  }
+}
+
 </script>
 
 <template>
   <main>
+    <div class="popup off" @click="togglePopup">
+      <form class="popupForm" @click.stop>
+        <input type="text" v-model="popupCardData.title">
+        <textarea type="text" v-model="popupCardData.desc"></textarea>
+        <!-- Have a converter to H/M -->
+        <input type="text" v-model="popupCardData.time">
+
+        <select multiple>
+          <template v-for="currentCardId in currentCardIds" :key="currentCardId">  
+            <template v-if="popupCardData.id != currentCardId">
+              
+              <template v-if="popupCardData.require.indexOf(currentCardId) != -1">
+                <option selected :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+              </template>
+              <template v-else>
+                <option :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+              </template>
+
+            </template>
+          </template>
+        </select>
+        
+        
+        <select>
+          <option value="">None</option>
+          <template v-for="boardMemberId in boardMembersId" :key="boardMemberId">
+            <!-- popupCardData.assigned == boardMemberId ? "selected" : "" -->
+            <template v-if="popupCardData.assigned == boardMemberId">
+              <option selected :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
+            </template>
+            <template v-else>
+              <option :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
+            </template>
+            <!--  -->
+          </template>
+        </select>
+
+        <input type="submit" value="Update!">
+      </form>
+    </div>
     <SideNav />
     <section class="boardContainer">
       <div class="lane" :style="{ '--laneColor': lane.color }" v-for="lane in boardData" :key="lane">
@@ -514,10 +590,13 @@ onMounted(() => {
             <i class="laneCategory" style="display: none">{{ lane.category }}</i>
             <h4 v-if="subLane.title != ''">{{ subLane.title }}</h4>
             <div class="card" ondragover="this.classList.add('hover')" ondragleave="this.classList.remove('hover')" draggable="true" v-for="card in subLane.cards" :key="card">
+              <figure class="settings" @click="togglePopup(e, card)">
+                ⚙️
+              </figure>
               <section style="pointer-events: none;">
                 <i class="cardId" style="display: none">{{card.id}}</i>
                 <i class="cardOrder" style="display: none">{{card.order}}</i>
-                <p>
+                <p style="padding-right: 1em">
                   {{card.title}}
                 </p>
                 <!-- <p>
@@ -591,6 +670,7 @@ main
         //box-shadow: var(--darkText) 0 0 18px -10px
         margin-bottom: 4px
       .card
+        position: relative
         color: var(--darkText)
         background: var(--sandBg)
         border-bottom: solid 3px var(--laneColor)
@@ -621,5 +701,54 @@ main
       p
         pointer-events: none
         
+.settings
+  position: absolute
+  top: .2em
+  right: .2em
+  cursor: pointer
 
+.popupForm
+  input, textarea, select
+    width: 100%
+    margin-bottom: 1em
+
+textarea
+  resize: vertical
+  min-height: 6em
+  max-height: 12em
+
+select option
+  border-radius: 20px
+  padding: 3px 1em
+  &:checked
+    border-radius: 0
+    background: var(--sandBg) !important
+    color: var(--darkText)
+    border-left: solid 3px var(--darkSandBg)
+    &:first-of-type
+      border-radius: 10px 10px 0 0
+    &:last-of-type
+      border-radius: 0 0 10px 10px
+      border-bottom: solid 3px var(--darkSandBg)
+  &:focus
+    background: var(--sandBg) !important
+    color: var(--darkText)
+
+textarea, select
+  border-radius: 20px
+  border: none
+  border-bottom: 3px solid var(--darkSandBg)
+  border-left: 3px solid var(--darkSandBg)
+  padding: .5em
+  background: radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg)
+  color: var(--waterText)
+  transition: 100ms
+  &:focus
+    outline: none
+    border-bottom: 3px solid var(--waterText)
+    border-left: 3px solid var(--waterText)
+  &:hover
+    border-bottom: 3px solid var(--waterText)
+    border-left: 3px solid var(--waterText)
+    
 </style>
