@@ -580,7 +580,7 @@ const togglePopup = async (e, card = false) => {
             </template>
           </select>
 
-          <input type="submit" value="Update!">
+          <input type="submit" value="Update!"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
         </form>
       </div>
     </div>
