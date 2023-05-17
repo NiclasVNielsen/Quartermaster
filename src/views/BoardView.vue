@@ -734,6 +734,7 @@ textarea
   transform: translate(-50%, 0)
   top: 4em
   transition: 500ms
+  cursor: pointer
   & + div
     transition: 500ms
     opacity: 0
@@ -753,6 +754,7 @@ textarea
     width: 70vw
     height: 70vh
     z-index: 1001
+    cursor: auto
     & + div
       top: calc(50% + 32.5vh)
       left: 50%
@@ -767,6 +769,12 @@ textarea
       border-radius: 20px
       border-left: 3px solid var(--darkSandBg)
       border-bottom: 3px solid var(--darkSandBg)
+      color: var(--darkText)
+      font-weight: bold
+      &:hover
+        color: var(--darkTextHighlight)
+        border-left: 3px solid var(--waterText)
+        border-bottom: 3px solid var(--waterText)
 
 select  
   transition: 100ms
