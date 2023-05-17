@@ -540,44 +540,49 @@ const togglePopup = async (e, card = false) => {
 <template>
   <main>
     <div class="popup off" @click="togglePopup">
-      <form class="popupForm" @click.stop>
-        <input type="text" v-model="popupCardData.title">
-        <textarea type="text" v-model="popupCardData.desc"></textarea>
-        <!-- Have a converter to H/M -->
-        <input type="text" v-model="popupCardData.time">
+      <div class="popupBlock" @click.stop>
+        <form class="popupForm" @click.stop>
+          <input type="text" v-model="popupCardData.title">
+          <textarea type="text" v-model="popupCardData.desc"></textarea>
+          <div>
+            Close
+          </div>
+          <!-- Have a converter to H/M -->
+          <input type="text" v-model="popupCardData.time">
 
-        <select multiple>
-          <template v-for="currentCardId in currentCardIds" :key="currentCardId">  
-            <template v-if="popupCardData.id != currentCardId">
-              
-              <template v-if="popupCardData.require.indexOf(currentCardId) != -1">
-                <option selected :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+          <select multiple>
+            <template v-for="currentCardId in currentCardIds" :key="currentCardId">  
+              <template v-if="popupCardData.id != currentCardId">
+                
+                <template v-if="popupCardData.require.indexOf(currentCardId) != -1">
+                  <option selected :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+                </template>
+                <template v-else>
+                  <option :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+                </template>
+
+              </template>
+            </template>
+          </select>
+          
+          
+          <select>
+            <option value="">None</option>
+            <template v-for="boardMemberId in boardMembersId" :key="boardMemberId">
+              <!-- popupCardData.assigned == boardMemberId ? "selected" : "" -->
+              <template v-if="popupCardData.assigned == boardMemberId">
+                <option selected :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
               </template>
               <template v-else>
-                <option :value="currentCardId">{{ currentCardTitles[currentCardIds.indexOf(currentCardId)] }}</option>
+                <option :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
               </template>
+              <!--  -->
+            </template>
+          </select>
 
-            </template>
-          </template>
-        </select>
-        
-        
-        <select>
-          <option value="">None</option>
-          <template v-for="boardMemberId in boardMembersId" :key="boardMemberId">
-            <!-- popupCardData.assigned == boardMemberId ? "selected" : "" -->
-            <template v-if="popupCardData.assigned == boardMemberId">
-              <option selected :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
-            </template>
-            <template v-else>
-              <option :value="boardMemberId">{{ turnUserIdToName(boardMemberId) }}</option>
-            </template>
-            <!--  -->
-          </template>
-        </select>
-
-        <input type="submit" value="Update!">
-      </form>
+          <input type="submit" value="Update!">
+        </form>
+      </div>
     </div>
     <SideNav />
     <section class="boardContainer">
@@ -591,7 +596,9 @@ const togglePopup = async (e, card = false) => {
             <h4 v-if="subLane.title != ''">{{ subLane.title }}</h4>
             <div class="card" ondragover="this.classList.add('hover')" ondragleave="this.classList.remove('hover')" draggable="true" v-for="card in subLane.cards" :key="card">
               <figure class="settings" @click="togglePopup(e, card)">
-                ⚙️
+                <span class="material-symbols-rounded">
+                  open_in_full
+                </span>
               </figure>
               <section style="pointer-events: none;">
                 <i class="cardId" style="display: none">{{card.id}}</i>
@@ -599,9 +606,6 @@ const togglePopup = async (e, card = false) => {
                 <p style="padding-right: 1em">
                   {{card.title}}
                 </p>
-                <!-- <p>
-                  {{card.desc}}
-                </p> -->
                 <div class="completeList">
                   <br>
                   Complete before this:
@@ -703,19 +707,62 @@ main
         
 .settings
   position: absolute
-  top: .2em
-  right: .2em
+  top: .4em
+  right: .4em
   cursor: pointer
+  span
+    font-size: 1em
 
 .popupForm
-  input, textarea, select
+  input, select
     width: 100%
     margin-bottom: 1em
 
+.popupBlock
+  height: 100vh
+  width: 70vw
+  margin: 0 auto
+
 textarea
-  resize: vertical
-  min-height: 6em
-  max-height: 12em
+  resize: none
+  position: absolute
+  height: 6em
+  width: calc( 100% - 40px )
+  left: 50%
+  transform: translate(-50%, 0)
+  top: 4em
+  transition: 100ms
+  & + div
+    margin-top: 6em
+    opacity: 0
+    height: 0
+  &:focus
+    top: calc(50% - 2.5vh)
+    left: 50%
+    transform: translate(-50%, -50%)
+    width: 70vw
+    height: 70vh
+    z-index: 1001
+    & + div
+      margin-top: 0
+      opacity: 1
+      padding-top: 5vh
+      display: block
+      position: absolute
+      top: calc(50% + 32.5vh)
+      left: 50%
+      transform: translate(-50%, -50%)
+      z-index: 1000
+      width: 70vw
+      height: 10vh
+      display: flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      background: var(--sandBg)
+      border-radius: 20px
+      border-left: 3px solid var(--darkSandBg)
+      border-bottom: 3px solid var(--darkSandBg)
 
 select option
   border-radius: 20px
@@ -733,6 +780,7 @@ select option
   &:focus
     background: var(--sandBg) !important
     color: var(--darkText)
+
 
 textarea, select
   border-radius: 20px
