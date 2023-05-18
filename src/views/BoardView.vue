@@ -500,7 +500,6 @@ onMounted(() => {
 })
 
 const fillOutPopup = (card) => {
-  console.log(document.querySelectorAll(".card .cardId"))
   currentCardIds = Array.from(document.querySelectorAll(".card .cardId")).map(x => x.innerHTML)
   currentCardTitles = Array.from(document.querySelectorAll(".card > section > p:first-of-type")).map(x => x.innerHTML)
 
@@ -536,15 +535,15 @@ const togglePopup = async (e, card = false) => {
 
   if(card != false){
     fillOutPopup(card)
-    popup.classList.remove("off");
+    popupCardData.value.new = card.new
+    popup.classList.remove("off")
   }else{
-    popup.classList.add("off");
+    popup.classList.add("off")
   }
 }
 
 const popupSubmit = (e) => {
   //e.preventDefault()
-  console.log("popsub")
   if(popupCardData.value.new == true){
     createNewCard()
   }else{
@@ -555,8 +554,7 @@ const popupSubmit = (e) => {
 }
 
 const createNewCard = () => {
-  console.log("newCard")
-  laneFound = false
+  let laneFound = false
   boardData.value.forEach(lane => {
     if(lane.category == "todo"){
       laneFound = true
@@ -569,7 +567,7 @@ const createNewCard = () => {
         desc: popupCardData.value.desc,
         assigned: popupCardData.value.assigned,
         require: popupCardData.value.require,
-        time: ((popupCardData.value.hours * 60) + popupCardData.value.minutes) // hours * 60 + minutes
+        time: (parseInt(popupCardData.value.hours * 60) + parseInt(popupCardData.value.minutes)) // hours * 60 + minutes
       })
     }
   })
@@ -580,14 +578,13 @@ const createNewCard = () => {
 }
 
 const updateCard = () => {
-  console.log("updateCard")
   const card = findCardInBoardData(popupCardData.value.id)
   
   card.title = popupCardData.value.title
   card.desc = popupCardData.value.desc
   card.assigned = popupCardData.value.assigned
   card.require = popupCardData.value.require
-  card.time = ((popupCardData.value.hours * 60) + popupCardData.value.minutes)
+  card.time = (parseInt(popupCardData.value.hours * 60) + parseInt(popupCardData.value.minutes))
 }
 
 </script>
@@ -611,7 +608,7 @@ const updateCard = () => {
             <input type="text" v-model="popupCardData.minutes">
           </div>
 
-          <select multiple>
+          <select multiple v-model="popupCardData.require">
             <template v-for="currentCardId in currentCardIds" :key="currentCardId">  
               <template v-if="popupCardData.id != currentCardId">
                 
@@ -627,7 +624,7 @@ const updateCard = () => {
           </select>
           
           
-          <select>
+          <select v-model="popupCardData.assigned">
             <option value="">None</option>
             <template v-for="boardMemberId in boardMembersId" :key="boardMemberId">
               <!-- popupCardData.assigned == boardMemberId ? "selected" : "" -->
@@ -646,6 +643,19 @@ const updateCard = () => {
       </div>
     </div>
     <SideNav />
+    <button class="create" @click='togglePopup(null, {
+        id: "",
+        title: "Title",
+        desc: "Description",
+        time: 0,
+        hours: 0,
+        minutes: 0,
+        require: [],
+        assigned: "",
+        new: true
+      })'>
+      + Create Card
+    </button>
     <section class="boardContainer">
       <div class="lane" :style="{ '--laneColor': lane.color }" v-for="lane in boardData" :key="lane">
         <i class="laneId" style="display: none">{{ lane.id }}</i>
