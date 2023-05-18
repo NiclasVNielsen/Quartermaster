@@ -243,6 +243,7 @@ const postDataToDB = () => {
     body: JSON.stringify({ 
       title: board.value.title,
       members: board.value.members,
+      cardId: board.value.cardId,
       board: board.value.board
     })
   })
@@ -558,7 +559,7 @@ const createNewCard = () => {
   boardData.value.forEach(lane => {
     if(lane.category == "todo"){
       laneFound = true
-      board.value.cardId += 1
+      board.value.cardId = parseInt(board.value.cardId) + 1
 
       lane.subLanes[0].cards.push({
         id: board.value.cardId,
@@ -714,7 +715,7 @@ main
     width: 300px
     height: 100%
     >div
-      height: calc(100% - .5em)
+      height: calc(100% - 2em - 14px)
       display: flex
       flex-direction: column
       >section
