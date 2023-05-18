@@ -588,6 +588,21 @@ const updateCard = () => {
   card.time = (parseInt(popupCardData.value.hours * 60) + parseInt(popupCardData.value.minutes))
 }
 
+const deleteCard = (id) => {
+  const card = findCardInBoardData(id)
+
+  boardData.value.forEach(lane => {
+    lane.subLanes.forEach(subLane => {
+      if(subLane.cards.indexOf(card) != -1){
+        console.log(true)
+        subLane.cards.splice(subLane.cards.indexOf(card), 1)
+      }
+    })
+  })
+
+  postDataToDB()  
+}
+
 </script>
 
 <template>
@@ -640,6 +655,7 @@ const updateCard = () => {
           </select>
 
           <input @click="popupSubmit()" value="Update!  (Yes i am a button!)"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
+          <input @click="deleteCard(popupCardData.id)" value="Delete!  (Yes i am a button!)">
         </form>
       </div>
     </div>
@@ -687,7 +703,7 @@ const updateCard = () => {
                 </div>
                 <p>
                   <br>
-                  Assigned to: {{ turnUserIdToName(card.assigned) }}
+                  Assigned to: {{ card.assigned == "" ? "none" : turnUserIdToName(card.assigned) }}
                 </p>
               </section>
             </div>
