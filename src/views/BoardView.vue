@@ -504,12 +504,16 @@ const fillOutPopup = (card) => {
   currentCardIds = Array.from(document.querySelectorAll(".card .cardId")).map(x => x.innerHTML)
   currentCardTitles = Array.from(document.querySelectorAll(".card > section > p:first-of-type")).map(x => x.innerHTML)
 
+  popupCardData.value.new = false
   popupCardData.value.id = card.id
   popupCardData.value.title = card.title
   popupCardData.value.desc = card.desc
   popupCardData.value.time = card.time
   popupCardData.value.require = card.require
   popupCardData.value.assigned = card.assigned
+
+  popupCardData.value.hours = Math.floor(popupCardData.value.time / 60)
+  popupCardData.value.minutes = Math.floor(popupCardData.value.time % 60)
 }
 
 let currentCardIds = []
@@ -518,10 +522,13 @@ let currentCardTitles = []
 const popupCardData = ref({
   id: "",
   title: "Title",
-  desc: "Desc",
-  time: 600,
+  desc: "Description",
+  time: 0, /* in minutes */
+  hours: 0, /* only for calculating time and displaying things cleaner on frontend */
+  minutes: 0, /* -//- */
   require: [],
-  assigned: "64350f1e176e8ddbc40d37f4"
+  assigned: "",
+  new: true
 })
 
 const togglePopup = async (e, card = false) => {
@@ -533,6 +540,53 @@ const togglePopup = async (e, card = false) => {
   }else{
     popup.classList.add("off");
   }
+}
+
+const popupSubmit = (e) => {
+  //e.preventDefault()
+  console.log("popsub")
+  if(popupCardData.value.new == true){
+    createNewCard()
+  }else{
+    updateCard()
+  }
+  postDataToDB()
+}
+
+const createNewCard = () => {
+  console.log("newCard")
+  laneFound = false
+  boardData.value.forEach(lane => {
+    if(lane.category == "todo"){
+      laneFound = true
+      board.value.cardId += 1
+
+      lane.subLanes[0].cards.push({
+        id: board.value.cardId,
+        order: 0,
+        title: popupCardData.value.title,
+        desc: popupCardData.value.desc,
+        assigned: popupCardData.value.assigned,
+        require: popupCardData.value.require,
+        time: ((popupCardData.value.hours * 60) + popupCardData.value.minutes) // hours * 60 + minutes
+      })
+    }
+  })
+
+  if(laneFound == false){
+    // ehh no todo lane found
+  }
+}
+
+const updateCard = () => {
+  console.log("updateCard")
+  const card = findCardInBoardData(popupCardData.value.id)
+  
+  card.title = popupCardData.value.title
+  card.desc = popupCardData.value.desc
+  card.assigned = popupCardData.value.assigned
+  card.require = popupCardData.value.require
+  card.time = ((popupCardData.value.hours * 60) + popupCardData.value.minutes)
 }
 
 </script>
@@ -548,7 +602,13 @@ const togglePopup = async (e, card = false) => {
             Close
           </div>
           <!-- Have a converter to H/M -->
-          <input type="text" v-model="popupCardData.time">
+          <div class="timePannel">
+            <p>
+              Hours / Minutes
+            </p>
+            <input style="margin-bottom: 1em" type="text" v-model="popupCardData.hours">
+            <input type="text" v-model="popupCardData.minutes">
+          </div>
 
           <select multiple>
             <template v-for="currentCardId in currentCardIds" :key="currentCardId">  
@@ -580,7 +640,7 @@ const togglePopup = async (e, card = false) => {
             </template>
           </select>
 
-          <input type="submit" value="Update!"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
+          <input @click="popupSubmit()" value="Update!"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
         </form>
       </div>
     </div>
@@ -775,6 +835,11 @@ textarea
         color: var(--darkTextHighlight)
         border-left: 3px solid var(--waterText)
         border-bottom: 3px solid var(--waterText)
+      &:active
+        color: var(--darkTextHighlight)
+        border-left: 3px solid var(--waterText)
+        border-bottom: 3px solid var(--waterText)
+        background: var(--darkSandBg)
 
 select  
   transition: 100ms
@@ -813,4 +878,16 @@ textarea, select
     border-bottom: 3px solid var(--waterText)
     border-left: 3px solid var(--waterText)
     
+.timePannel
+  display: flex
+  justify-content: space-between
+  p, input
+    display: block
+    width: 32%
+  p
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 1em
+
 </style>
