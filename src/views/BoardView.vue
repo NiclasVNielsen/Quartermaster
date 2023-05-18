@@ -551,6 +551,7 @@ const popupSubmit = (e) => {
     updateCard()
   }
   postDataToDB()
+  togglePopup()
 }
 
 const createNewCard = () => {
@@ -640,7 +641,7 @@ const updateCard = () => {
             </template>
           </select>
 
-          <input @click="popupSubmit()" value="Update!"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
+          <input @click="popupSubmit()" value="Update!  (Yes i am a button!)"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
         </form>
       </div>
     </div>
