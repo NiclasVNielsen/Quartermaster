@@ -12,6 +12,7 @@ const board = ref([])
 const boardData = ref([])
 
 const boardId = route.params.id
+console.log(boardId)
 
 //* Test Data
 /* const boardData = ref([
