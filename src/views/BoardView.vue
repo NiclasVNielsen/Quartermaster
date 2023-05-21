@@ -290,6 +290,17 @@ onMounted(() => {
       board.value = data
       boardData.value = data.board
 
+      const compareOrdersAsc = (a, b) => {
+        if(a.order < b.order){
+          return -1
+        }
+        if(a.order > b.order){
+          return 1
+        }
+        return 0
+      }
+      boardData.value.sort(compareOrdersAsc)
+
       //? Board setup
       setTimeout(() => {
         getNamesFromBoardMembers()
@@ -587,7 +598,7 @@ const popupSubmit = (e) => {
 const createNewCard = () => {
   let laneFound = false
   boardData.value.forEach(lane => {
-    if(lane.category == "todo"){
+    if(lane.category == "todo" && laneFound == false){
       laneFound = true
       board.value.cardId = parseInt(board.value.cardId) + 1
 
