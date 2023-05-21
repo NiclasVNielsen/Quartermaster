@@ -1,12 +1,28 @@
 <script setup>
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
+import { ref } from 'vue'
 
 const createPopup = () => {
   const popup = document.querySelector(".popup")
 
   popup.classList.toggle("off");
 }
+
+const boards = ref([])
+
+fetch("http://localhost:4000/api/boards/user/" + localStorage.getItem("id"),{
+  headers: {
+    "auth-token": localStorage.getItem("token")
+  }
+}).then(data => {
+  data.json().then(x => {
+    console.log(x)
+    boards.value = x
+    console.log(boards.value)
+  })
+})
+
 </script>
 
 <template>
@@ -25,10 +41,10 @@ const createPopup = () => {
         <h2 style="margin-bottom: .5em">
           Personal Boards
         </h2>
-        <li>
+        <li v-for="board in boards" :key="board">
           <p class="big">
-            <RouterLink to="/board/64632967ecf9a5103ad33e11"> <!-- /board/id -->
-              Find Morgans rum vault!
+            <RouterLink :to="'/board/' + board._id"> <!-- /board/id -->
+              {{ board.title }}
             </RouterLink>
           </p>
           <p class="medium">
@@ -42,7 +58,7 @@ const createPopup = () => {
             </RouterLink>
           </p>
           <p class="small">
-            <RouterLink to="/board/id"> <!-- /board/id -->
+            <RouterLink :to="'/board/' + board._id"> <!-- /board/id -->
               Open!
             </RouterLink>
           </p>
