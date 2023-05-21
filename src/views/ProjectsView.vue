@@ -12,7 +12,10 @@ const createPopup = () => {
 <template>
   <main>
     <SideNav />
-    <section>
+    <section class="WIP">
+      Work in Progress
+    </section>
+    <!-- <section>
       <button class="create" @click="createPopup">
         + Create Project
       </button>
@@ -27,8 +30,8 @@ const createPopup = () => {
         </h2>
         <li>
           <p class="big">
-            <RouterLink to="/project/id"> <!-- /project/id -->
-              <!-- Assigned to -->Project
+            <RouterLink to="/project/id"> <!- /project/id
+              <!- Assigned to ->Project
             </RouterLink>
           </p>
         </li>
@@ -37,13 +40,13 @@ const createPopup = () => {
         </h2>
         <li>
           <p class="big">
-            <RouterLink to="/project/id"> <!-- /project/id -->
-              <!-- Assigned to -->Project
+            <RouterLink to="/project/id"> <!- /project/id 
+              <!- Assigned to ->Project
             </RouterLink>
           </p>
         </li>
       </ul>
-    </section>
+    </section> -->
   </main>
   <Footer />
 </template>

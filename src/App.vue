@@ -71,10 +71,10 @@ input
     border-bottom: 3px solid var(--waterText)
     border-left: 3px solid var(--waterText)
 
-.popup.off
+.popup.off, .editBoardPopup.off
   display: none
 
-.popup
+.popup, .editBoardPopup
   z-index: 1000
   position: fixed
   top: 0
@@ -164,6 +164,15 @@ input
         flex: 4
         a
           font-weight: bold
+
+.WIP
+  display: flex
+  justify-content: center
+  align-items: center
+  font-size: 3em
+  font-weight: bold
+  color: var(--darkTextHighlight)
+  padding: 0
 
 /* Make little thing that peaks out */
 

@@ -12,7 +12,10 @@ const createPopup = () => {
 <template>
   <main>
     <SideNav />
-    <button class="create" @click="createPopup">
+    <section class="WIP">
+      Work in Progress
+    </section>
+    <!-- <button class="create" @click="createPopup">
       + Create Company
     </button>
     <section>
@@ -30,7 +33,7 @@ const createPopup = () => {
         </h2>
         <li>
           <p class="big">
-            <RouterLink to="/company/id"> <!-- /board/id -->
+            <RouterLink to="/company/id"> <!- /board/id 
               Captain Morgan
             </RouterLink>
           </p>
@@ -40,13 +43,13 @@ const createPopup = () => {
         </h2>
         <li>
           <p class="big">
-            <RouterLink to="/company/id"> <!-- /board/id -->
+            <RouterLink to="/company/id"> <!- /board/id 
               The Caribbean Rum Factory
             </RouterLink>
           </p>
         </li>
       </ul>
-    </section>
+    </section> -->
   </main>
   <Footer />
 </template>

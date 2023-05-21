@@ -1,4 +1,6 @@
 <script setup>
+//! Be warned the software architecture in this file is a mess 
+
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
 import { onMounted, ref } from 'vue';
@@ -126,11 +128,26 @@ const boardId = route.params.id
 ])
  */
 
-const boardMembersId = ['64350f1e176e8ddbc40d37f4']
-const boardMembersName = ['Me']
+const boardMembersId = ref([])
+const boardMembersName = ref([])
+
+const getNamesFromBoardMembers = () => {
+  boardMembersId.value = board.value.members
+  boardMembersId.value.forEach(memberId => {
+    fetch("http://localhost:4000/api/users/" + memberId,{
+      headers: {
+        "auth-token": localStorage.getItem("token")
+      }
+    }).then(data => {
+      data.json().then(x => {
+        boardMembersName.value.push(x.name)
+      })
+    })
+  })
+}
 
 const turnUserIdToName = (id) => {
-  return boardMembersName[boardMembersId.indexOf(id)]
+  return boardMembersName.value[boardMembersId.value.indexOf(id)]
 }
 
 
@@ -234,7 +251,12 @@ const checkForReliance = (cardId) => {
 
 
 const postDataToDB = () => {
-  fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
+  console.log(board.value.members)
+  console.log("i am sending to db: ", JSON.stringify({
+    members: board.value.members
+  }))
+  
+  fetch("http://localhost:4000/api/boards/" + boardId, {
     method: "PUT",
     headers: {
       "auth-token": localStorage.getItem("token"),
@@ -247,11 +269,17 @@ const postDataToDB = () => {
       board: board.value.board
     })
   })
+  /* console.log("Would have been send to db" + JSON.stringify({ 
+    title: board.value.title,
+    members: board.value.members,
+    cardId: board.value.cardId,
+    board: board.value.board
+  })) */
 }
 
 onMounted(() => {
   const loadData = () => {
-    fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
+    fetch("http://localhost:4000/api/boards/" + boardId, {
       headers: {
         "auth-token": localStorage.getItem("token")
       }
@@ -263,6 +291,7 @@ onMounted(() => {
 
       //? Board setup
       setTimeout(() => {
+        getNamesFromBoardMembers()
         laneSecs = document.querySelectorAll(".laneSection")
   
         getAllCardIds().forEach(cardId => {
@@ -603,6 +632,70 @@ const deleteCard = (id) => {
   postDataToDB()  
 }
 
+
+const newBoardName = ref(board.value.title)
+const addMembers = ref([])
+const amountOfMembersToAdd = ref(3)
+
+const membersToRemove = ref([])
+
+const lanesToRemove = ref([])
+
+const toggleEditBoardPopup = (clear = false) => {
+  const popup = document.querySelector(".editBoardPopup")
+
+  popup.classList.toggle("off")
+
+  if(clear){
+    addMembers.value = []
+    amountOfMembersToAdd.value = [0]
+  }
+}
+
+const EditBoardPopupSubmit = async () => {
+  console.log(board.value.title) //! find a way to make this not auto update
+  
+  //? [] find id by email and add the user to members
+  //* i have to use a for loop here instead of forEach
+  //* because forEach does not support "await"
+  //! i had issues making the postDataToDB() wait for the fetching
+  const x = async () => { for(let i = 0; i < addMembers.value.length; i++){
+    const member = addMembers.value[i]
+
+    //! Does this mannage to fetch before the postDataDB()?
+    await fetch("http://localhost:4000/api/users/email/" + member, { //http://localhost:4000
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+        'Content-Type': 'application/json'
+      }
+    }).then(data => {
+      data.json().then(x => {
+        if(board.value.members.indexOf(x.data._id) == -1){
+          board.value.members.push(x.data._id)
+
+          //! not optimal      
+          postDataToDB()
+          //! -----------
+        }
+      })
+    })
+    console.log("meep")
+  }}
+
+  await x()
+
+  //? [] remove from members
+  membersToRemove.value.forEach(memberToRemove => {
+    board.value.members.forEach(memberInArray => {
+      if(memberInArray == memberToRemove){
+        board.value.members.splice(board.value.members.indexOf(memberToRemove), 1)
+      }
+    })
+  })
+
+  postDataToDB()
+}
+
 </script>
 
 <template>
@@ -659,7 +752,48 @@ const deleteCard = (id) => {
         </form>
       </div>
     </div>
+
+    <div class="editBoardPopup off" @click="toggleEditBoardPopup(true)">
+      <div class="popupBlock" @click.stop>
+        <form class="popupForm" @click.stop>
+          <input type="text" v-model="board.title">
+
+          <p @click="amountOfMembersToAdd++">
+            Add member
+          </p>
+          <template v-if="amountOfMembersToAdd != 0">
+            <template  v-for="index in amountOfMembersToAdd" :key="index">
+              <input type="text" v-model="addMembers[index - 1]">
+            </template>
+          </template>
+          <p>
+            Remove members
+          </p>
+          <template v-for="member in board.members" :key="member">
+            <input type="checkbox" :value="member" v-model="membersToRemove">
+            <label>{{ turnUserIdToName(member) }}</label>
+            <br>
+          </template>
+          
+          <!-- <p>
+            Remove lanes
+          </p>
+          <template v-for="lane in board.board" :key="lane">
+            <input type="checkbox" :value="lane.id" v-model="lanesToRemove">
+            <label>{{ lane.title }}</label>
+            <br>
+          </template> -->
+        
+          <input @click="EditBoardPopupSubmit()" value="Update!  (Yes i am a button!)">
+        </form>
+      </div>
+    </div>
     <SideNav />
+    <figure class="editBoard" @click="toggleEditBoardPopup">
+      <span class="material-symbols-rounded">
+        settings
+      </span>
+    </figure>
     <button class="create" @click='togglePopup(null, {
         id: "",
         title: "Title",
@@ -800,6 +934,19 @@ main
   cursor: pointer
   span
     font-size: 1em
+
+.editBoard
+  position: fixed
+  top: .2em
+  right: .2em
+  cursor: pointer
+  color: var(--waterText)
+  span
+    transition: 400ms
+  &:hover
+    span
+      transform: rotate(180deg)
+      color: var(--waterTextHighlight)
 
 .popupForm
   input, select
