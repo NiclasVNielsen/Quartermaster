@@ -775,9 +775,13 @@ const deleteBoard = () => {
               <!--  -->
             </template>
           </select>
-
-          <input @click="popupSubmit()" value="Update!  (Yes i am a button!)"> <!-- @click="prevent.default" merge form input with boardData and uploadData -->
-          <input @click="deleteCard(popupCardData.id)" value="Delete!  (Yes i am a button!)">
+          <template v-if="popupCardData.new == true">
+            <input @click="popupSubmit()" class="submitButton" disabled value="Create!">
+          </template>
+          <template v-else>
+            <input @click="popupSubmit()" class="submitButton" disabled value="Update!">
+            <input @click="deleteCard(popupCardData.id)" disabled class="deleteButton" value="Delete!">
+          </template>
         </form>
       </div>
     </div>
@@ -814,9 +818,9 @@ const deleteBoard = () => {
             <br>
           </template> -->
         
-          <input @click="EditBoardPopupSubmit()" value="Update!  (Yes i am a button!)">
-          <input v-model="deleteBoardValue" placeholder="Delete board">
-          <input @click="deleteBoard()" value="Delete Board!  (Yes i am a button!)">
+          <input @click="EditBoardPopupSubmit()" class="submitButton" disabled value="Update!">
+          <input v-model="deleteBoardValue" placeholder='Type "Delete board" in this field to activate delete button'>
+          <input @click="deleteBoard()" disabled class="deleteButton" value="Delete Board!">
         </form>
       </div>
     </div>
@@ -1124,5 +1128,25 @@ textarea, select
     &:checked
       + label
         text-decoration: line-through
+
+.submitButton
+  cursor: pointer
+  background: var(--waterTextHighlight)
+  border-bottom: solid 3px var(--waterText)
+  border-left: solid 3px var(--waterText)
+  color: var(--darkText)
+  &:hover
+    background: var(--waterText)
+    color: var(--waterTextHighlight)
+
+.deleteButton
+  cursor: pointer
+  background: var(--darkTextHighlight)
+  border-bottom: solid 3px var(--darkText)
+  border-left: solid 3px var(--darkText)
+  color: var(--darkText)
+  &:hover
+    background: var(--darkText)
+    color: var(--darkTextHighlight)
 
 </style>
