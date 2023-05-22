@@ -4,9 +4,10 @@
 import SideNav from '../components/SideNav.vue'
 import Footer from '../components/FooterComponent.vue'
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
+const router = useRouter()
 
 const board = ref([])
 const boardData = ref([])
@@ -708,6 +709,20 @@ const EditBoardPopupSubmit = async () => {
   postDataToDB()
 }
 
+const deleteBoardValue = ref("")
+const deleteBoard = () => {
+  if(deleteBoardValue.value == "Delete board"){
+    fetch("http://localhost:4000/api/boards/" + board.value._id, {
+      method: "DELETE",
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+        'Content-Type': 'application/json'
+      }
+    })
+    router.push("/boards")
+  }
+}
+
 </script>
 
 <template>
@@ -797,6 +812,8 @@ const EditBoardPopupSubmit = async () => {
           </template> -->
         
           <input @click="EditBoardPopupSubmit()" value="Update!  (Yes i am a button!)">
+          <input v-model="deleteBoardValue" placeholder="Delete board">
+          <input @click="deleteBoard()" value="Delete Board!  (Yes i am a button!)">
         </form>
       </div>
     </div>
