@@ -785,23 +785,24 @@ const deleteBoard = () => {
     <div class="editBoardPopup off" @click="toggleEditBoardPopup(true)">
       <div class="popupBlock" @click.stop>
         <form class="popupForm" @click.stop>
-          <input type="text" v-model="board.title">
+          <input type="text" style="margin-bottom: 1em" v-model="board.title">
 
-          <p @click="amountOfMembersToAdd++">
-            Add member
+          <p class="button" @click="amountOfMembersToAdd++">
+            + Add member
           </p>
           <template v-if="amountOfMembersToAdd != 0">
             <template  v-for="index in amountOfMembersToAdd" :key="index">
-              <input type="text" v-model="addMembers[index - 1]">
+              <input type="text" v-model="addMembers[index - 1]" placeholder="QmUser@email.com">
             </template>
           </template>
           <p>
             Remove members
           </p>
           <template v-for="member in board.members" :key="member">
-            <input type="checkbox" :value="member" v-model="membersToRemove">
-            <label>{{ turnUserIdToName(member) }}</label>
-            <br>
+            <div class="deleteRow">
+              <input type="checkbox" :value="member" v-model="membersToRemove">
+              <label>{{ turnUserIdToName(member) }}</label>
+            </div>
           </template>
           
           <!-- <p>
@@ -992,6 +993,21 @@ main
   width: 70vw
   margin: 0 auto
 
+.button
+  background: radial-gradient(farthest-corner at 5% 5%, var(--neutralBg) 0%, var(--waterBg) 250%), var(--neutralBg)
+  padding: .4em .6em
+  border-radius: 20px
+  border: solid 3px var(--waterText)
+  color: var(--waterText)
+  font-weight: 700
+  transition: 100ms
+  cursor: pointer
+  z-index: 1010
+  margin-bottom: .5em
+  &:hover
+    border: solid 3px var(--waterTextHighlight)
+    color: var(--waterTextHighlight)
+
 textarea
   resize: none
   position: absolute
@@ -1096,5 +1112,17 @@ textarea, select
     align-items: center
     justify-content: center
     margin-bottom: 1em
+
+.deleteRow
+  display: flex
+  margin: 10px 0
+  >input
+    width: 20px
+    margin-right: 10px
+    &:first-of-type
+      margin-bottom: 0
+    &:checked
+      + label
+        text-decoration: line-through
 
 </style>
