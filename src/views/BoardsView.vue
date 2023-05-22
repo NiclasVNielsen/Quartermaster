@@ -11,7 +11,7 @@ const createPopup = () => {
 
 const boards = ref([])
 
-fetch("http://localhost:4000/api/boards/user/" + localStorage.getItem("id"),{
+fetch("https://quartermasterapi.onrender.com/api/boards/user/" + localStorage.getItem("id"),{
   headers: {
     "auth-token": localStorage.getItem("token")
   }
@@ -98,7 +98,7 @@ const popupSubmit = () => {
     board: board.value.board
   }))
   
-  fetch("http://localhost:4000/api/boards/",{
+  fetch("https://quartermasterapi.onrender.com/api/boards/",{
     method: "POST",
     headers: {
       "auth-token": localStorage.getItem("token"),

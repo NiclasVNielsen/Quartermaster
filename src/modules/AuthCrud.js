@@ -4,7 +4,7 @@ export const register = (resolve, reject, name, email, password, repeatPassword)
     }else{
         //? Database call
         fetch(
-            "http://localhost:4000/api/auth/register/",
+            "https://quartermasterapi.onrender.com/api/auth/register/",
             {
                 method: "POST",
                 headers: {

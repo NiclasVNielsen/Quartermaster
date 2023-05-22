@@ -136,7 +136,7 @@ const boardMembersName = ref([])
 const getNamesFromBoardMembers = () => {
   boardMembersId.value = board.value.members
   boardMembersId.value.forEach(memberId => {
-    fetch("http://localhost:4000/api/users/" + memberId,{
+    fetch("https://quartermasterapi.onrender.com/api/users/" + memberId,{
       headers: {
         "auth-token": localStorage.getItem("token")
       }
@@ -214,6 +214,7 @@ const checkForReliance = (cardId) => {
     cards.forEach(card => {
       requiredCardsIds.forEach(requiredCardId => {
         if(card.querySelector(".cardId").innerHTML == requiredCardId){
+          console.log(category)
           results.push(category.innerHTML == "done")
         }
       })
@@ -235,6 +236,7 @@ const checkForReliance = (cardId) => {
 
 
     card.querySelectorAll(".completeList > p").forEach((listItem, index) => {
+      console.log(results)
       if(results[index] == true){
         listItem.classList.add("checked")
       }else{
@@ -258,7 +260,7 @@ const postDataToDB = () => {
     members: board.value.members
   }))
   
-  fetch("http://localhost:4000/api/boards/" + boardId, {
+  fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
     method: "PUT",
     headers: {
       "auth-token": localStorage.getItem("token"),
@@ -281,7 +283,7 @@ const postDataToDB = () => {
 
 onMounted(() => {
   const loadData = () => {
-    fetch("http://localhost:4000/api/boards/" + boardId, {
+    fetch("https://quartermasterapi.onrender.com/api/boards/" + boardId, {
       headers: {
         "auth-token": localStorage.getItem("token")
       }
@@ -676,7 +678,7 @@ const EditBoardPopupSubmit = async () => {
     const member = addMembers.value[i]
 
     //! Does this mannage to fetch before the postDataDB()?
-    await fetch("http://localhost:4000/api/users/email/" + member, { //http://localhost:4000
+    await fetch("https://quartermasterapi.onrender.com/api/users/email/" + member, { //http://localhost:4000
       headers: {
         "auth-token": localStorage.getItem("token"),
         'Content-Type': 'application/json'
@@ -712,7 +714,7 @@ const EditBoardPopupSubmit = async () => {
 const deleteBoardValue = ref("")
 const deleteBoard = () => {
   if(deleteBoardValue.value == "Delete board"){
-    fetch("http://localhost:4000/api/boards/" + board.value._id, {
+    fetch("https://quartermasterapi.onrender.com/api/boards/" + board.value._id, {
       method: "DELETE",
       headers: {
         "auth-token": localStorage.getItem("token"),
@@ -970,6 +972,7 @@ main
   right: .2em
   cursor: pointer
   color: var(--waterText)
+  z-index: 1000
   span
     transition: 400ms
   &:hover
