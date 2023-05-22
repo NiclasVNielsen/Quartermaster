@@ -114,6 +114,7 @@ input
   font-weight: 700
   transition: 100ms
   cursor: pointer
+  z-index: 1010
   &:hover
     border: solid 3px var(--waterTextHighlight)
     color: var(--waterTextHighlight)
